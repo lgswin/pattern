@@ -1,0 +1,1149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="한국어 사고 구조와 영어 표현을 연결하는 IELTS Writing &amp; Speaking 문장 패턴 100가지">
+  <title>IELTS Writing &amp; Speaking 문장 패턴 100</title>
+  <style>
+    :root {
+      --ink: #17324d;
+      --muted: #607286;
+      --paper: #fffdf8;
+      --canvas: #f3f0e9;
+      --line: #dce3e5;
+      --teal: #087f79;
+      --teal-soft: #e5f4f1;
+      --coral: #e56b52;
+      --coral-soft: #fff0eb;
+      --gold: #d49b27;
+      --gold-soft: #fff6dc;
+      --navy-soft: #edf2f7;
+      --shadow: 0 20px 60px rgba(23, 50, 77, .10);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 2%, rgba(8, 127, 121, .12), transparent 26rem),
+        radial-gradient(circle at 90% 16%, rgba(229, 107, 82, .10), transparent 24rem),
+        var(--canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 32px auto 72px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 4vw, 40px);
+      border-radius: 30px;
+      color: #fff;
+      background: linear-gradient(135deg, #153450 0%, #0a6868 72%, #087f79 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+    }
+
+    .hero::before { width: 270px; height: 270px; right: -70px; top: -95px; }
+    .hero::after { width: 170px; height: 170px; right: 100px; bottom: -105px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 16px;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      opacity: .9;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 3px;
+      border-radius: 999px;
+      background: #ffb45f;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(1.9rem, 4.2vw, 3.25rem);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+
+    .toolbar {
+      position: sticky;
+      z-index: 10;
+      top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 18px 0 26px;
+      padding: 12px;
+      border: 1px solid rgba(220, 227, 229, .85);
+      border-radius: 18px;
+      background: rgba(255, 253, 248, .90);
+      box-shadow: 0 10px 30px rgba(23,50,77,.07);
+      backdrop-filter: blur(14px);
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1 1 260px;
+    }
+
+    .search-wrap::before {
+      content: "⌕";
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-52%);
+      color: var(--muted);
+      font-size: 1.25rem;
+    }
+
+    #pattern-search {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px 0 42px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      outline: none;
+    }
+
+    #pattern-search:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(8,127,121,.12);
+    }
+
+    #skill-filter {
+      height: 44px;
+      padding: 0 34px 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-size: .84rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .filters { display: flex; flex-wrap: wrap; gap: 7px; }
+
+    button {
+      min-height: 40px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-size: .84rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--teal); color: var(--teal); }
+    button[aria-pressed="true"] { border-color: var(--teal); color: #fff; background: var(--teal); }
+
+    .print-button { margin-left: auto; }
+
+    .section {
+      margin-top: 28px;
+      padding: clamp(22px, 4vw, 38px);
+      border: 1px solid rgba(220, 227, 229, .9);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 10px 35px rgba(23,50,77,.055);
+    }
+
+    .section-heading {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-heading h2 {
+      margin: 0 0 5px;
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      line-height: 1.2;
+      letter-spacing: -.025em;
+    }
+
+    .section-heading p { margin: 0; color: var(--muted); }
+
+    .count {
+      flex: 0 0 auto;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      font-size: .75rem;
+      font-weight: 800;
+    }
+
+    .formula {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 20px;
+      border-left: 5px solid var(--coral);
+      border-radius: 4px 16px 16px 4px;
+      background: var(--coral-soft);
+    }
+
+    .formula-label {
+      padding: 6px 10px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--coral);
+      font-size: .76rem;
+      font-weight: 850;
+    }
+
+    .formula p { margin: 0; }
+    .formula strong { display: block; margin-bottom: 3px; color: #8a3e2f; }
+    .formula code { font: 750 1rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .table-shell {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .94rem;
+    }
+
+    thead { color: #fff; background: var(--ink); }
+
+    th, td {
+      padding: 16px 15px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: .76rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    tbody > tr[data-group]:not(:first-child) { border-top: 1px solid var(--line); }
+    tbody > tr[data-group]:nth-of-type(4n + 3) { background: #fbfcfb; }
+    tbody > tr[data-group]:hover { background: #f2faf8; }
+
+    .num {
+      display: inline-grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      border-radius: 9px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      font-size: .75rem;
+      font-weight: 900;
+    }
+
+    .type-name { font-weight: 850; }
+    .ko-structure { color: #314b63; font-weight: 650; }
+
+    .skill-badge {
+      display: inline-block;
+      margin: 7px 4px 0 0;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: .63rem;
+      font-weight: 900;
+      letter-spacing: .03em;
+    }
+
+    .skill-badge.both { color: #0a6b66; background: var(--teal-soft); }
+    .skill-badge.writing { color: #634aa1; background: #f0ebff; }
+    .skill-badge.speaking { color: #aa4a36; background: var(--coral-soft); }
+
+    .practice-toggle {
+      display: block;
+      width: 32px;
+      height: 32px;
+      min-height: 32px;
+      margin-top: 9px;
+      padding: 0;
+      border-color: rgba(8,127,121,.28);
+      border-radius: 9px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .practice-toggle[aria-expanded="true"] {
+      border-color: var(--coral);
+      color: #a44432;
+      background: var(--coral-soft);
+    }
+
+    .practice-row { background: #f7faf9; }
+    .practice-row > td { padding: 0 14px 18px; }
+
+    .practice-panel {
+      padding: 20px;
+      border: 1px solid #cfe3df;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: inset 4px 0 0 var(--teal);
+    }
+
+    .practice-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .practice-head h3 { margin: 0 0 2px; font-size: 1rem; }
+    .practice-head p { margin: 0; color: var(--muted); font-size: .78rem; }
+
+    .practice-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .practice-field { display: grid; gap: 6px; }
+    .practice-field span { color: #40576b; font-size: .73rem; font-weight: 850; }
+
+    .practice-field textarea {
+      width: 100%;
+      min-height: 76px;
+      resize: vertical;
+      padding: 10px 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      line-height: 1.5;
+      outline: none;
+    }
+
+    .practice-field textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(8,127,121,.11);
+    }
+
+    .save-practice {
+      min-height: 76px;
+      padding-inline: 18px;
+      border-color: var(--teal);
+      color: #fff;
+      background: var(--teal);
+    }
+
+    .save-practice:hover { color: #fff; background: #066c67; }
+
+    .practice-status {
+      min-height: 1.4em;
+      margin: 8px 0 0;
+      color: var(--teal);
+      font-size: .76rem;
+      font-weight: 750;
+    }
+
+    .practice-status:empty { display: none; }
+
+    .practice-status.error { color: #b34531; }
+
+    .saved-details {
+      margin-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .saved-details summary {
+      padding: 13px 2px 4px;
+      color: var(--ink);
+      font-size: .84rem;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .saved-details summary::marker { color: var(--teal); }
+
+    .pair-list {
+      display: grid;
+      gap: 9px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: pair;
+    }
+
+    .pair-card {
+      counter-increment: pair;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfcfb;
+    }
+
+    .pair-card::before {
+      content: counter(pair, decimal-leading-zero);
+      position: absolute;
+      top: 9px;
+      right: 11px;
+      color: #91a0ac;
+      font-size: .65rem;
+      font-weight: 900;
+    }
+
+    .pair-text { min-width: 0; padding-right: 22px; }
+    .pair-text strong { display: block; margin-bottom: 3px; color: var(--muted); font-size: .68rem; }
+    .pair-text p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+    .delete-pair {
+      align-self: end;
+      min-height: 30px;
+      padding: 3px 8px;
+      border-color: #ead4cf;
+      color: #a64a39;
+      background: #fff;
+      font-size: .7rem;
+    }
+
+    .practice-empty {
+      margin: 10px 0 0;
+      padding: 11px;
+      border-radius: 10px;
+      color: var(--muted);
+      background: var(--navy-soft);
+      font-size: .78rem;
+      text-align: center;
+    }
+
+    .en-pattern {
+      display: inline;
+      padding: 2px 5px;
+      border-radius: 5px;
+      color: #0c6661;
+      background: var(--teal-soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-weight: 800;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .example { color: #43576a; }
+    .example::before { content: "\201C"; color: var(--coral); font-size: 1.3em; font-weight: 900; }
+    .example::after { content: "\201D"; color: var(--coral); font-size: 1.3em; font-weight: 900; }
+
+    .group-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-size: .72rem;
+      font-weight: 800;
+    }
+
+    .group-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .growth { color: #087f79; background: var(--teal-soft); }
+    .experience { color: #b74b37; background: var(--coral-soft); }
+    .judgment { color: #946611; background: var(--gold-soft); }
+    .preference { color: #415d7b; background: var(--navy-soft); }
+    .cause { color: #286a9b; background: #e9f3fb; }
+    .compare { color: #7653a6; background: #f1ecf9; }
+    .problem { color: #a94747; background: #faecec; }
+    .example-group { color: #4d7047; background: #edf5e9; }
+    .condition { color: #986319; background: #fff3dc; }
+    .data { color: #526474; background: #edf1f4; }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .quick-card {
+      min-height: 128px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .quick-card:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(23,50,77,.08); }
+    .quick-card .ko { margin: 0 0 8px; color: var(--muted); font-size: .82rem; font-weight: 800; }
+    .quick-card .en { margin: 0; color: var(--ink); font-weight: 800; }
+
+    .six-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: essential;
+    }
+
+    .six-list li {
+      counter-increment: essential;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 13px;
+      background: var(--navy-soft);
+      font-weight: 800;
+    }
+
+    .six-list li::before {
+      content: counter(essential, decimal-leading-zero);
+      color: var(--coral);
+      font-size: .72rem;
+      font-weight: 900;
+    }
+
+    .empty-state {
+      display: none;
+      margin: 22px 0 0;
+      padding: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      color: var(--muted);
+      text-align: center;
+      background: #fff;
+    }
+
+    footer {
+      margin-top: 24px;
+      padding: 20px;
+      color: var(--muted);
+      text-align: center;
+      font-size: .83rem;
+    }
+
+    :focus-visible { outline: 3px solid rgba(229,107,82,.45); outline-offset: 3px; }
+
+    @media (max-width: 900px) {
+      .quick-grid, .six-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      th, td { padding: 14px 11px; }
+      .group-col { display: none; }
+      .practice-form { grid-template-columns: 1fr 1fr; }
+      .save-practice { grid-column: 1 / -1; min-height: 44px; }
+    }
+
+    @media (max-width: 680px) {
+      .page { width: min(100% - 20px, 1180px); margin-top: 10px; }
+      .hero { border-radius: 22px; }
+      .toolbar { top: 6px; }
+      #skill-filter { flex: 1 1 150px; }
+      .filters {
+        flex: 1 1 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 3px;
+        scrollbar-width: thin;
+      }
+      .filters button { flex: 0 0 auto; }
+      .print-button { display: none; }
+      .section { padding: 20px 14px; }
+      .formula { grid-template-columns: 1fr; gap: 10px; }
+      .quick-grid, .six-list { grid-template-columns: 1fr; }
+      .table-shell { overflow: visible; border: 0; background: transparent; }
+      table, tbody { display: block; }
+      thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      tbody tr[data-group] {
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 0 10px;
+        margin-bottom: 12px;
+        padding: 16px;
+        border: 1px solid var(--line) !important;
+        border-radius: 14px;
+        background: #fff !important;
+      }
+      tbody tr[data-group] > td { display: block; padding: 6px 0; }
+      tbody tr[data-group] > td:first-child { grid-row: 1 / span 4; }
+      tbody tr[data-group] > td:not(:first-child) { grid-column: 2; }
+      tbody tr[data-group] > td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 2px;
+        color: var(--muted);
+        font-size: .66rem;
+        font-weight: 850;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+      }
+      tbody tr[data-group] > td:first-child::before { display: none; }
+      .group-col { display: none; }
+      .practice-row { display: block; margin: -4px 0 14px; background: transparent; }
+      .practice-row > td { display: block; padding: 0; }
+      .practice-panel { padding: 17px 14px; }
+      .practice-form { grid-template-columns: 1fr; }
+      .save-practice { grid-column: auto; min-height: 44px; }
+      .pair-card { grid-template-columns: 1fr; }
+      .delete-pair { justify-self: start; }
+    }
+
+    @media print {
+      :root { --canvas: #fff; --paper: #fff; }
+      body { background: #fff; color: #111; font-size: 9.5pt; }
+      .page { width: 100%; margin: 0; }
+      .hero { padding: 28px; border-radius: 0; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .toolbar, footer { display: none; }
+      .section { break-inside: avoid; margin-top: 14px; padding: 18px; box-shadow: none; }
+      .table-shell { overflow: visible; }
+      th, td { padding: 9px; }
+      thead { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      tr { break-inside: avoid; }
+      .quick-card { min-height: auto; break-inside: avoid; }
+      .practice-toggle, .practice-form, .practice-status, .practice-empty, .delete-pair { display: none; }
+      .practice-panel { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">IELTS Writing &amp; Speaking Pattern Guide</p>
+      <h1>한국어 생각을<br>영어 문장으로</h1>
+    </header>
+
+    <nav class="toolbar" aria-label="문장 유형 검색과 필터">
+      <label class="search-wrap">
+        <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">표현 검색</span>
+        <input id="pattern-search" type="search" placeholder="예: 시간이 지나면서, Looking back..." autocomplete="off">
+      </label>
+      <div class="filters" aria-label="범주 필터">
+        <button type="button" data-filter="all" aria-pressed="true">전체</button>
+        <button type="button" data-filter="growth" aria-pressed="false">변화·성장</button>
+        <button type="button" data-filter="experience" aria-pressed="false">경험·결과</button>
+        <button type="button" data-filter="judgment" aria-pressed="false">의견·판단</button>
+        <button type="button" data-filter="preference" aria-pressed="false">선호·이유</button>
+        <button type="button" data-filter="cause" aria-pressed="false">원인·결과</button>
+        <button type="button" data-filter="compare" aria-pressed="false">비교·대조</button>
+        <button type="button" data-filter="problem" aria-pressed="false">문제·해결</button>
+        <button type="button" data-filter="example" aria-pressed="false">예시·설명</button>
+        <button type="button" data-filter="condition" aria-pressed="false">양보·조건</button>
+        <button type="button" data-filter="data" aria-pressed="false">자료·보고</button>
+      </div>
+      <label>
+        <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">활용 영역</span>
+        <select id="skill-filter" aria-label="Writing 또는 Speaking 활용 영역">
+          <option value="all">전체 활용</option>
+          <option value="writing">Writing 포함</option>
+          <option value="speaking">Speaking 포함</option>
+          <option value="both">공통 패턴만</option>
+        </select>
+      </label>
+      <button class="print-button" type="button" onclick="window.print()">인쇄 / PDF</button>
+    </nav>
+
+    <section class="section" aria-labelledby="patterns-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="patterns-title">문장 기능별 패턴 100</h2>
+          <p>활용 표시를 참고하고, 각 유형의 ‘연습 기록’을 열어 한국어→영어 작문 쌍을 계속 저장하세요.</p>
+        </div>
+        <span class="count" id="result-count" aria-live="polite">100개</span>
+      </div>
+
+      <div class="table-shell">
+        <table id="patterns-table">
+          <thead>
+            <tr>
+              <th scope="col">번호</th>
+              <th scope="col">유형</th>
+              <th scope="col">한국어 표현 구조</th>
+              <th scope="col">영어 대표 구조</th>
+              <th scope="col">예문</th>
+              <th scope="col" class="group-col">범주</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-group="growth"><td><span class="num">01</span></td><td data-label="유형" class="type-name">처음과 현재의 변화</td><td data-label="한국어 구조" class="ko-structure">처음에는 A였지만, 시간이 지나면서 B가 되었다</td><td data-label="영어 구조"><span class="en-pattern">At first..., but over time...</span></td><td data-label="예문" class="example">At first, I wasn't very confident, but over time, I became more comfortable.</td><td class="group-col"><span class="group-label growth">변화·성장</span></td></tr>
+            <tr data-group="growth"><td><span class="num">02</span></td><td data-label="유형" class="type-name">계속하면서 발전</td><td data-label="한국어 구조" class="ko-structure">계속 A하다 보니 점점 B하게 되었다</td><td data-label="영어 구조"><span class="en-pattern">As I kept..., I gradually...</span></td><td data-label="예문" class="example">As I kept practicing, I gradually became more confident.</td><td class="group-col"><span class="group-label growth">변화·성장</span></td></tr>
+            <tr data-group="growth"><td><span class="num">03</span></td><td data-label="유형" class="type-name">과거와 현재 비교</td><td data-label="한국어 구조" class="ko-structure">예전에는 A했지만, 지금은 B한다</td><td data-label="영어 구조"><span class="en-pattern">I used to..., but now...</span></td><td data-label="예문" class="example">I used to get nervous, but now I can speak more naturally.</td><td class="group-col"><span class="group-label growth">변화·성장</span></td></tr>
+            <tr data-group="experience"><td><span class="num">04</span></td><td data-label="유형" class="type-name">예상과 실제 차이</td><td data-label="한국어 구조" class="ko-structure">처음에는 A라고 생각했지만, 막상 해보니 B였다</td><td data-label="영어 구조"><span class="en-pattern">I didn't expect..., but...</span></td><td data-label="예문" class="example">I didn't expect much, but it turned out to be really useful.</td><td class="group-col"><span class="group-label experience">경험·결과</span></td></tr>
+            <tr data-group="experience"><td><span class="num">05</span></td><td data-label="유형" class="type-name">어려움과 배움</td><td data-label="한국어 구조" class="ko-structure">A하기는 어려웠지만, 그 과정에서 B를 배웠다</td><td data-label="영어 구조"><span class="en-pattern">It was difficult, but I learned...</span></td><td data-label="예문" class="example">It was harder than I expected, but I learned a lot from the experience.</td><td class="group-col"><span class="group-label experience">경험·결과</span></td></tr>
+            <tr data-group="experience"><td><span class="num">06</span></td><td data-label="유형" class="type-name">계획과 결과</td><td data-label="한국어 구조" class="ko-structure">계획대로 되지는 않았지만, 결과적으로 B가 되었다</td><td data-label="영어 구조"><span class="en-pattern">It didn't go according to plan, but...</span></td><td data-label="예문" class="example">It didn't go according to plan, but things worked out well in the end.</td><td class="group-col"><span class="group-label experience">경험·결과</span></td></tr>
+            <tr data-group="judgment"><td><span class="num">07</span></td><td data-label="유형" class="type-name">생각의 변화</td><td data-label="한국어 구조" class="ko-structure">예전에는 A라고 생각했지만, 경험하면서 B라고 깨달았다</td><td data-label="영어 구조"><span class="en-pattern">I used to think..., but I realized...</span></td><td data-label="예문" class="example">I used to think it wasn't important, but I realized it made a big difference.</td><td class="group-col"><span class="group-label judgment">의견·판단</span></td></tr>
+            <tr data-group="judgment"><td><span class="num">08</span></td><td data-label="유형" class="type-name">장단점 평가</td><td data-label="한국어 구조" class="ko-structure">장단점은 있지만, 전반적으로는 B라고 생각한다</td><td data-label="영어 구조"><span class="en-pattern">There are pros and cons, but overall...</span></td><td data-label="예문" class="example">There are pros and cons, but overall, I think it was a positive experience.</td><td class="group-col"><span class="group-label judgment">의견·판단</span></td></tr>
+            <tr data-group="judgment"><td><span class="num">09</span></td><td data-label="유형" class="type-name">단기와 장기 비교</td><td data-label="한국어 구조" class="ko-structure">당장은 A하더라도, 장기적으로는 B가 낫다</td><td data-label="영어 구조"><span class="en-pattern">Even if..., in the long run...</span></td><td data-label="예문" class="example">Even if it's inconvenient now, I think it's better in the long run.</td><td class="group-col"><span class="group-label judgment">의견·판단</span></td></tr>
+            <tr data-group="judgment"><td><span class="num">10</span></td><td data-label="유형" class="type-name">현실적인 선택</td><td data-label="한국어 구조" class="ko-structure">완벽하지는 않지만, 현실적으로는 B가 최선이다</td><td data-label="영어 구조"><span class="en-pattern">It's not perfect, but realistically...</span></td><td data-label="예문" class="example">It's not a perfect solution, but realistically, it's probably the best option.</td><td class="group-col"><span class="group-label judgment">의견·판단</span></td></tr>
+            <tr data-group="judgment"><td><span class="num">11</span></td><td data-label="유형" class="type-name">경험 기반 판단</td><td data-label="한국어 구조" class="ko-structure">내 경험상, A만 봐도 B인지 알 수 있다</td><td data-label="영어 구조"><span class="en-pattern">Based on my experience, I can...</span></td><td data-label="예문" class="example">Based on my experience, I can usually tell when something is wrong.</td><td class="group-col"><span class="group-label judgment">의견·판단</span></td></tr>
+            <tr data-group="experience"><td><span class="num">12</span></td><td data-label="유형" class="type-name">작은 것의 큰 영향</td><td data-label="한국어 구조" class="ko-structure">사소해 보이지만, 실제로는 큰 영향을 줬다</td><td data-label="영어 구조"><span class="en-pattern">It might seem..., but it made...</span></td><td data-label="예문" class="example">It might seem like a small thing, but it made a big difference in my daily life.</td><td class="group-col"><span class="group-label experience">경험·결과</span></td></tr>
+            <tr data-group="growth"><td><span class="num">13</span></td><td data-label="유형" class="type-name">익숙해지는 과정</td><td data-label="한국어 구조" class="ko-structure">A에 익숙해지는 데 시간이 걸렸다</td><td data-label="영어 구조"><span class="en-pattern">It took me a while to get used to...</span></td><td data-label="예문" class="example">It took me a while to get used to speaking English at work.</td><td class="group-col"><span class="group-label growth">변화·성장</span></td></tr>
+            <tr data-group="experience"><td><span class="num">14</span></td><td data-label="유형" class="type-name">가치 판단</td><td data-label="한국어 구조" class="ko-structure">처음에는 시간 낭비라고 생각했지만, 나중에는 가치가 있다고 느꼈다</td><td data-label="영어 구조"><span class="en-pattern">At first..., but later I realized it was worth it.</span></td><td data-label="예문" class="example">At first, I felt like I was wasting my time, but later I realized it was worth it.</td><td class="group-col"><span class="group-label experience">경험·결과</span></td></tr>
+            <tr data-group="preference"><td><span class="num">15</span></td><td data-label="유형" class="type-name">선호와 이유</td><td data-label="한국어 구조" class="ko-structure">내가 가장 좋아하는 점은 A라는 것이다</td><td data-label="영어 구조"><span class="en-pattern">What I like most is that...</span></td><td data-label="예문" class="example">What I like most is that it helps me relax.</td><td class="group-col"><span class="group-label preference">선호·이유</span></td></tr>
+            <tr data-group="experience"><td><span class="num">16</span></td><td data-label="유형" class="type-name">원인과 결과</td><td data-label="한국어 구조" class="ko-structure">A 때문에 B하게 되었다</td><td data-label="영어 구조"><span class="en-pattern">Because of..., I... / It helped me...</span></td><td data-label="예문" class="example">Because of that experience, I became more confident.</td><td class="group-col"><span class="group-label experience">경험·결과</span></td></tr>
+            <tr data-group="growth"><td><span class="num">17</span></td><td data-label="유형" class="type-name">점진적 변화</td><td data-label="한국어 구조" class="ko-structure">처음에는 A였지만 점점 B가 되었다</td><td data-label="영어 구조"><span class="en-pattern">I gradually became...</span></td><td data-label="예문" class="example">I gradually became more comfortable with it.</td><td class="group-col"><span class="group-label growth">변화·성장</span></td></tr>
+            <tr data-group="growth"><td><span class="num">18</span></td><td data-label="유형" class="type-name">뒤늦은 깨달음</td><td data-label="한국어 구조" class="ko-structure">그때는 몰랐지만, 나중에 A라는 것을 깨달았다</td><td data-label="영어 구조"><span class="en-pattern">I didn't realize it at the time, but later...</span></td><td data-label="예문" class="example">I didn't realize it at the time, but later I understood how important it was.</td><td class="group-col"><span class="group-label growth">변화·성장</span></td></tr>
+            <tr data-group="judgment"><td><span class="num">19</span></td><td data-label="유형" class="type-name">회고와 평가</td><td data-label="한국어 구조" class="ko-structure">돌이켜보면, A였다고 생각한다</td><td data-label="영어 구조"><span class="en-pattern">Looking back, I think...</span></td><td data-label="예문" class="example">Looking back, I think it was a really valuable experience.</td><td class="group-col"><span class="group-label judgment">의견·판단</span></td></tr>
+            <tr data-group="judgment"><td><span class="num">20</span></td><td data-label="유형" class="type-name">조건부 의견</td><td data-label="한국어 구조" class="ko-structure">A라면 B라고 생각한다</td><td data-label="영어 구조"><span class="en-pattern">If..., I think...</span></td><td data-label="예문" class="example">If I had the chance, I think I'd do it again.</td><td class="group-col"><span class="group-label judgment">의견·판단</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="empty-state" id="empty-state">검색 조건과 일치하는 표현이 없습니다.</p>
+
+      <aside class="formula" aria-label="문장 조립 공식">
+        <span class="formula-label">조립 공식</span>
+        <p><strong>변화 과정을 한 문장에 담고 싶다면</strong><code>At first..., but as I kept..., I gradually...</code></p>
+      </aside>
+    </section>
+
+    <section class="section" aria-labelledby="essential-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="essential-title">먼저 자동화할 핵심 6개</h2>
+          <p>Part 1·2·3에서 두루 재사용하기 좋은 기본 골격입니다.</p>
+        </div>
+        <span class="count">CORE 6</span>
+      </div>
+      <ol class="six-list">
+        <li>At first..., but...</li>
+        <li>I used to..., but now...</li>
+        <li>As I kept..., I gradually...</li>
+        <li>I didn't expect..., but...</li>
+        <li>Based on my experience...</li>
+        <li>Looking back, I think...</li>
+      </ol>
+    </section>
+
+    <section class="section" aria-labelledby="quick-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="quick-title">한국어 → 영어 바로 연결</h2>
+          <p>한국어 표현을 보는 즉시 영어의 시작 부분이 떠오르도록 반복하세요.</p>
+        </div>
+        <span class="count">15개</span>
+      </div>
+      <div class="quick-grid">
+        <article class="quick-card"><p class="ko">처음에는 ~했지만</p><p class="en">At first..., but...</p></article>
+        <article class="quick-card"><p class="ko">계속 하다 보니</p><p class="en">As I kept..., ...</p></article>
+        <article class="quick-card"><p class="ko">시간이 지나면서</p><p class="en">As time went by... / Over time...</p></article>
+        <article class="quick-card"><p class="ko">예전에는 ~했지만 지금은</p><p class="en">I used to..., but now...</p></article>
+        <article class="quick-card"><p class="ko">막상 해보니</p><p class="en">When I actually tried it...</p></article>
+        <article class="quick-card"><p class="ko">생각보다</p><p class="en">than I expected</p></article>
+        <article class="quick-card"><p class="ko">결국에는</p><p class="en">in the end / eventually</p></article>
+        <article class="quick-card"><p class="ko">장기적으로 보면</p><p class="en">in the long run</p></article>
+        <article class="quick-card"><p class="ko">내 경험상</p><p class="en">Based on my experience...</p></article>
+        <article class="quick-card"><p class="ko">돌이켜보면</p><p class="en">Looking back...</p></article>
+        <article class="quick-card"><p class="ko">그만한 가치가 있었다</p><p class="en">It was worth it.</p></article>
+        <article class="quick-card"><p class="ko">큰 차이를 만들었다</p><p class="en">It made a big difference.</p></article>
+        <article class="quick-card"><p class="ko">점점 익숙해졌다</p><p class="en">I gradually got used to it.</p></article>
+        <article class="quick-card"><p class="ko">점점 자신감이 생겼다</p><p class="en">I gradually became more confident.</p></article>
+        <article class="quick-card"><p class="ko">생각이 바뀌었다</p><p class="en">I changed my mind. / My perspective changed.</p></article>
+      </div>
+    </section>
+
+    <footer>IELTS Speaking 학습 자료 · 문장 기능별 패턴을 소리 내어 반복해 보세요.</footer>
+  </main>
+
+  <script>
+    (() => {
+      const extraPatterns = [
+        ["21", "judgment", "both", "의견 제시", "내 생각에는 A라고 본다", "In my view, ...", "In my view, public transport should be more affordable."],
+        ["22", "judgment", "both", "강한 의견", "나는 A라고 확신한다", "I firmly believe that...", "I firmly believe that education should be accessible to everyone."],
+        ["23", "condition", "both", "부분 동의", "어느 정도 동의하지만, B도 고려해야 한다", "I agree to some extent, but...", "I agree to some extent, but cost is also an important factor."],
+        ["24", "condition", "writing", "양측 견해 인정", "두 견해 모두 일리가 있지만, 나는 B라고 본다", "While both views have merit, I would argue that...", "While both views have merit, I would argue that prevention is more effective."],
+        ["25", "cause", "both", "주된 이유 제시", "주된 이유 중 하나는 A라는 것이다", "One of the main reasons is that...", "One of the main reasons is that people have less free time."],
+        ["26", "cause", "writing", "복합 원인 설명", "이 현상은 주로 A 때문이라고 볼 수 있다", "This can largely be attributed to...", "This can largely be attributed to rapid urbanization."],
+        ["27", "cause", "both", "직접적인 결과", "그 결과 B가 발생했다", "As a result, ...", "As a result, many small businesses were forced to close."],
+        ["28", "cause", "writing", "연쇄적인 영향", "이는 다시 B로 이어진다", "This, in turn, leads to...", "This, in turn, leads to higher levels of stress."],
+        ["29", "cause", "writing", "연관성 제시", "A와 B 사이에는 분명한 연관성이 있다", "There appears to be a clear link between A and B.", "There appears to be a clear link between regular exercise and mental health."],
+        ["30", "cause", "both", "목적 설명", "A의 주된 목적은 B하는 것이다", "The primary purpose of A is to...", "The primary purpose of the policy is to reduce traffic congestion."],
+        ["31", "compare", "both", "유사점 연결", "마찬가지로 B도 그렇다", "Similarly, ...", "Similarly, younger people tend to value flexibility."],
+        ["32", "compare", "both", "차이점 연결", "반면에 B는 다르다", "In contrast, ...", "In contrast, rural areas remained relatively unchanged."],
+        ["33", "compare", "writing", "두 대상 직접 비교", "A와 비교하면 B는 더 ~하다", "Compared with A, B...", "Compared with the previous year, sales were considerably higher."],
+        ["34", "compare", "both", "큰 정도 차이", "A는 B보다 훨씬 더 ~하다", "A is far more... than B.", "Online learning is far more flexible than traditional classes."],
+        ["35", "compare", "writing", "대조 병렬 구조", "A인 반면, B는 ~하다", "Whereas A..., B...", "Whereas car use declined, bus travel increased steadily."],
+        ["36", "compare", "both", "공통점 설명", "A와 B의 공통점은 C라는 것이다", "What A and B have in common is that...", "What these two cities have in common is that they are highly diverse."],
+        ["37", "judgment", "both", "주요 장점", "가장 큰 장점 중 하나는 A이다", "A major advantage is that...", "A major advantage is that employees can manage their time more freely."],
+        ["38", "judgment", "both", "잠재적 단점", "잠재적인 단점은 A이다", "A potential drawback is that...", "A potential drawback is that people may feel socially isolated."],
+        ["39", "judgment", "both", "장단점 균형", "한편으로는 A지만, 다른 한편으로는 B이다", "On the one hand..., on the other hand...", "On the one hand, tourism creates jobs; on the other hand, it can damage the environment."],
+        ["40", "judgment", "writing", "이익과 단점 비교", "전반적으로 이점이 단점보다 크다", "The benefits outweigh the drawbacks.", "Overall, I believe the benefits outweigh the drawbacks."],
+        ["41", "problem", "both", "핵심 문제 제시", "가장 시급한 문제 중 하나는 A이다", "One of the most pressing issues is...", "One of the most pressing issues is the lack of affordable housing."],
+        ["42", "problem", "writing", "근본 원인 지적", "문제의 근본 원인은 A이다", "The root cause of the problem is...", "The root cause of the problem is insufficient long-term planning."],
+        ["43", "problem", "both", "실용적 해결책", "실용적인 해결 방법은 A하는 것이다", "One practical way to address this is to...", "One practical way to address this is to improve public transport."],
+        ["44", "problem", "writing", "정부 대책", "정부는 A하기 위한 조치를 취해야 한다", "Governments should take steps to...", "Governments should take steps to limit unnecessary plastic use."],
+        ["45", "problem", "both", "개인의 역할", "개인도 A함으로써 역할을 할 수 있다", "Individuals can also play a role by...", "Individuals can also play a role by using less energy at home."],
+        ["46", "problem", "writing", "장기적 해결", "장기적인 해결책은 A하는 것이다", "A long-term solution would be to...", "A long-term solution would be to invest in early education."],
+        ["47", "problem", "both", "예방 중심 접근", "문제가 커진 뒤 해결하기보다 예방하는 편이 낫다", "It is better to prevent A than to deal with B later.", "It is better to prevent disease than to deal with its consequences later."],
+        ["48", "problem", "both", "해결의 우선순위", "첫 단계는 A여야 한다", "The first step should be to...", "The first step should be to identify the people most at risk."],
+        ["49", "example", "both", "일반적인 예시", "예를 들어 A가 있다", "For example, ...", "For example, many companies now allow staff to work from home."],
+        ["50", "example", "both", "구체적인 설명", "좀 더 구체적으로 말하면 A이다", "To be more specific, ...", "To be more specific, the course includes two hours of speaking practice each week."],
+        ["51", "example", "speaking", "개인 사례", "내 경우에는 A했다", "In my case, ...", "In my case, I became more productive after changing my routine."],
+        ["52", "example", "both", "가상 사례", "A라고 가정해 보자", "Suppose that...", "Suppose that a city makes all buses free for residents."],
+        ["53", "example", "both", "바꾸어 설명하기", "다시 말해 A라는 뜻이다", "In other words, ...", "In other words, people need both opportunity and motivation."],
+        ["54", "example", "speaking", "의미 명확히 하기", "내 말은 A라는 뜻이다", "What I mean is that...", "What I mean is that convenience is not the only consideration."],
+        ["55", "example", "both", "특정 상황 강조", "특히 A일 때 그렇다", "This is especially true when...", "This is especially true when people work under tight deadlines."],
+        ["56", "example", "both", "대표 사례 제시", "이를 잘 보여주는 사례는 A이다", "A good example of this is...", "A good example of this is the rapid growth of online banking."],
+        ["57", "condition", "both", "긍정 조건", "A하기만 하면 B할 수 있다", "As long as..., ...", "As long as the system is well managed, it can work effectively."],
+        ["58", "condition", "both", "부정 조건", "A하지 않으면 B하기 어렵다", "Unless..., ...", "Unless action is taken soon, the problem will become more serious."],
+        ["59", "condition", "writing", "추세 지속 가정", "이 추세가 계속된다면 B할 가능성이 있다", "If this trend continues, ...", "If this trend continues, demand is likely to exceed supply."],
+        ["60", "condition", "both", "이상적 상황", "이상적으로는 A해야 한다", "Ideally, ...", "Ideally, people should have access to both options."],
+        ["61", "condition", "both", "가능성 예측", "A할 가능성이 높다", "It is likely that...", "It is likely that remote work will remain common."],
+        ["62", "condition", "both", "불확실성 표현", "A한다고 반드시 B하는 것은 아니다", "There is no guarantee that...", "There is no guarantee that higher spending will improve results."],
+        ["63", "condition", "both", "양보 후 주장", "A이기는 하지만, B이다", "Although..., ...", "Although the initial cost is high, the long-term savings are substantial."],
+        ["64", "condition", "writing", "반론 인정", "분명 A인 측면은 있다", "Admittedly, ...", "Admittedly, strict regulations can be difficult to enforce."],
+        ["65", "condition", "writing", "반론의 한계 지적", "하지만 이 주장은 A를 간과한다", "However, this argument overlooks...", "However, this argument overlooks the needs of low-income families."],
+        ["66", "condition", "writing", "양보를 포함한 결론", "A에도 불구하고, 나는 여전히 B라고 본다", "Despite A, I still believe that B.", "Despite these concerns, I still believe that the policy is worthwhile."],
+        ["67", "data", "writing", "전반적 경향", "A는 전반적으로 B하는 경향을 보였다", "A tended to...", "The figure tended to increase over the period."],
+        ["68", "data", "writing", "최고점 도달", "A는 B로 최고점을 기록했다", "A reached a peak of B.", "The number of visitors reached a peak of 2 million in July."],
+        ["69", "data", "writing", "최저점 도달", "A는 B로 최저점을 기록했다", "A hit a low of B.", "The rate hit a low of 12 percent in 2018."],
+        ["70", "data", "writing", "급격한 증가", "A는 B에서 C로 급증했다", "A rose sharply from B to C.", "Online sales rose sharply from 20 to 45 percent."],
+        ["71", "data", "writing", "점진적인 증가", "A는 기간 동안 점진적으로 증가했다", "A increased gradually over the period.", "The population increased gradually over the period."],
+        ["72", "data", "writing", "안정적인 수치", "A는 B 수준에서 안정적으로 유지되었다", "A remained stable at around B.", "The unemployment rate remained stable at around 5 percent."],
+        ["73", "data", "writing", "수치 변동", "A는 B와 C 사이에서 변동했다", "A fluctuated between B and C.", "The price fluctuated between $40 and $55."],
+        ["74", "data", "writing", "두 배 증가", "A는 B에서 C로 두 배가 되었다", "A doubled from B to C.", "The proportion doubled from 15 to 30 percent."],
+        ["75", "data", "writing", "비율 차지", "A는 전체의 B를 차지했다", "A accounted for B of the total.", "Private cars accounted for nearly half of all journeys."],
+        ["76", "data", "writing", "다수와 소수", "대다수는 A였고, 소수만 B였다", "The majority..., while only a small minority...", "The majority chose option A, while only a small minority selected option C."],
+        ["77", "data", "writing", "개요문 작성", "전반적으로 A인 것이 분명하다", "Overall, it is clear that...", "Overall, it is clear that all three categories experienced growth."],
+        ["78", "data", "writing", "가장 두드러진 특징", "가장 눈에 띄는 특징은 A이다", "The most noticeable feature is that...", "The most noticeable feature is that car ownership rose dramatically."],
+        ["79", "data", "writing", "시작과 종료 수치", "A로 시작해 B로 끝났다", "A began at B and ended at C.", "The figure began at 35 percent and ended at just over 50 percent."],
+        ["80", "data", "writing", "수치 추월", "A는 특정 시점에 B를 추월했다", "A overtook B in...", "Bus use overtook car use in 2015."],
+        ["81", "data", "writing", "격차 변화", "A와 B 사이의 격차가 벌어졌다／좁혀졌다", "The gap between A and B widened/narrowed.", "The gap between the two groups narrowed considerably."],
+        ["82", "data", "writing", "순위 설명", "A가 1위를 차지했고 B가 그 뒤를 이었다", "A ranked first, followed by B.", "Canada ranked first, followed by Australia."],
+        ["83", "data", "writing", "과정의 시작", "과정은 A로 시작한다", "The process begins with...", "The process begins with the collection of raw materials."],
+        ["84", "data", "writing", "다음 단계 연결", "그 다음 A가 이어진다", "This is followed by...", "This is followed by a heating stage."],
+        ["85", "data", "writing", "과정의 마무리", "과정은 최종적으로 A로 끝난다", "The process culminates in...", "The process culminates in the packaging of the finished product."],
+        ["86", "data", "writing", "수동태로 과정 설명", "그런 다음 A가 B로 운반된다", "A is then transported to B.", "The mixture is then transported to a storage tank."],
+        ["87", "data", "writing", "지도 전체 변화", "그 지역은 상당한 변화를 겪었다", "The area underwent significant changes.", "The area underwent significant changes between 2000 and 2025."],
+        ["88", "data", "writing", "시설 대체", "A가 철거되고 B로 대체되었다", "A was replaced by B.", "The old factory was replaced by an apartment complex."],
+        ["89", "data", "writing", "새 시설 추가", "A의 동쪽에 B가 새로 추가되었다", "B was added to the east of A.", "A new parking area was added to the east of the station."],
+        ["90", "data", "writing", "공간 확장", "A가 확장되어 B를 포함하게 되었다", "A was expanded to include B.", "The shopping area was expanded to include several cafés."],
+        ["91", "data", "writing", "위치 표현", "A는 B의 북쪽에 위치해 있다", "A is located to the north of B.", "The sports centre is located to the north of the river."],
+        ["92", "data", "writing", "지도 변화 요약", "전반적으로 그 지역은 더 A해졌다", "Overall, the area became more...", "Overall, the area became more residential and accessible."],
+        ["93", "experience", "speaking", "기억에 남는 경험 시작", "가장 기억에 남는 경험 중 하나는 A이다", "One experience that really stands out is...", "One experience that really stands out is my first day at university."],
+        ["94", "experience", "speaking", "배경 설정", "이 일은 A했을 때 일어났다", "This happened when...", "This happened when I was travelling through western Canada."],
+        ["95", "experience", "speaking", "전환점 제시", "전환점은 A했을 때 찾아왔다", "The turning point came when...", "The turning point came when my manager asked me to lead the project."],
+        ["96", "experience", "speaking", "감정 생생하게 표현", "나는 정말 A하게 느꼈다", "I was genuinely...", "I was genuinely surprised by how welcoming everyone was."],
+        ["97", "experience", "speaking", "기억에 남은 이유", "그 경험이 기억에 남은 이유는 A이다", "What made it memorable was...", "What made it memorable was the sense of achievement I felt."],
+        ["98", "experience", "speaking", "경험에서 배운 점", "그 경험은 나에게 A를 가르쳐 주었다", "It taught me that...", "It taught me that preparation matters more than talent."],
+        ["99", "experience", "speaking", "미래의 재도전", "기회가 된다면 꼭 다시 A하고 싶다", "If I get the chance, I would definitely...", "If I get the chance, I would definitely visit the city again."],
+        ["100", "judgment", "speaking", "생각할 시간 확보", "흥미로운 질문이다. 내 생각에는 A이다", "That's an interesting question. I'd say...", "That's an interesting question. I'd say convenience matters most to me."]
+      ];
+
+      const groupLabels = {
+        growth: "변화·성장",
+        experience: "경험·결과",
+        judgment: "의견·판단",
+        preference: "선호·이유",
+        cause: "원인·결과",
+        compare: "비교·대조",
+        problem: "문제·해결",
+        example: "예시·설명",
+        condition: "양보·조건",
+        data: "자료·보고"
+      };
+
+      const groupClasses = { example: "example-group" };
+      const skillLabels = { both: "공통", writing: "Writing", speaking: "Speaking" };
+      const tbody = document.querySelector("#patterns-table tbody");
+
+      extraPatterns.forEach(([id, group, skill, type, ko, pattern, example]) => {
+        const row = document.createElement("tr");
+        row.dataset.group = group;
+        row.dataset.skill = skill;
+
+        const values = [
+          ["", id],
+          ["유형", type],
+          ["한국어 구조", ko],
+          ["영어 구조", pattern],
+          ["예문", example]
+        ];
+
+        values.forEach(([label, value], index) => {
+          const cell = document.createElement("td");
+          if (label) cell.dataset.label = label;
+          if (index === 0) {
+            const number = document.createElement("span");
+            number.className = "num";
+            number.textContent = id;
+            cell.append(number);
+          } else if (index === 1) {
+            cell.className = "type-name";
+            cell.textContent = value;
+          } else if (index === 2) {
+            cell.className = "ko-structure";
+            cell.textContent = value;
+          } else if (index === 3) {
+            const patternText = document.createElement("span");
+            patternText.className = "en-pattern";
+            patternText.textContent = value;
+            cell.append(patternText);
+          } else {
+            cell.className = "example";
+            cell.textContent = value;
+          }
+          row.append(cell);
+        });
+
+        const groupCell = document.createElement("td");
+        groupCell.className = "group-col";
+        const groupLabel = document.createElement("span");
+        groupLabel.className = "group-label " + (groupClasses[group] || group);
+        groupLabel.textContent = groupLabels[group];
+        groupCell.append(groupLabel);
+        row.append(groupCell);
+        tbody.append(row);
+      });
+
+      const search = document.querySelector('#pattern-search');
+      const buttons = [...document.querySelectorAll('[data-filter]')];
+      const skillFilter = document.querySelector("#skill-filter");
+      const rows = [...document.querySelectorAll('#patterns-table tbody tr[data-group]')];
+      const count = document.querySelector('#result-count');
+      const empty = document.querySelector('#empty-state');
+      const practiceRows = new Map();
+      const storageKey = "ielts-pattern-practice-v1";
+      let activeGroup = 'all';
+      let practiceData = {};
+
+      try {
+        const stored = JSON.parse(localStorage.getItem(storageKey) || "{}");
+        if (stored && typeof stored === "object" && !Array.isArray(stored)) practiceData = stored;
+      } catch (error) {
+        practiceData = {};
+      }
+
+      const normalize = (text) => text.toLocaleLowerCase('ko-KR').replace(/\s+/g, ' ').trim();
+
+      function persistPractice() {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(practiceData));
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      rows.forEach((row) => {
+        const id = row.querySelector(".num").textContent.trim();
+        const typeCell = row.querySelector(".type-name");
+        const typeName = typeCell.childNodes[0].textContent.trim();
+        const skill = row.dataset.skill || "both";
+        row.dataset.skill = skill;
+        row.dataset.practiceOpen = "false";
+
+        const badge = document.createElement("span");
+        badge.className = "skill-badge " + skill;
+        badge.textContent = skillLabels[skill];
+        typeCell.append(document.createElement("br"), badge);
+
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "practice-toggle";
+        toggle.textContent = "+";
+        toggle.setAttribute("aria-label", id + "번 패턴 연습 기록 열기");
+        toggle.title = "연습 기록 열기";
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-controls", "practice-panel-" + id);
+        typeCell.append(toggle);
+
+        const practiceRow = document.createElement("tr");
+        practiceRow.className = "practice-row";
+        practiceRow.dataset.owner = id;
+        practiceRow.hidden = true;
+
+        const practiceCell = document.createElement("td");
+        practiceCell.colSpan = 6;
+        const panel = document.createElement("div");
+        panel.className = "practice-panel";
+        panel.id = "practice-panel-" + id;
+        panel.innerHTML =
+          '<div class="practice-head"><div><h3></h3></div></div>' +
+          '<form class="practice-form">' +
+            '<label class="practice-field"><span>1. 한국어 예문</span><textarea name="ko" rows="2" required placeholder="먼저 한국어 예문을 입력하세요"></textarea></label>' +
+            '<label class="practice-field"><span>2. 영어 작문</span><textarea name="en" rows="2" required placeholder="해당 예문을 영어로 작성하세요"></textarea></label>' +
+            '<button class="save-practice" type="submit">연습 쌍 저장</button>' +
+          '</form>' +
+          '<p class="practice-status" aria-live="polite"></p>' +
+          '<p class="practice-empty">첫 연습 쌍을 저장하면 이곳에 누적됩니다.</p>' +
+          '<details class="saved-details"><summary></summary><ol class="pair-list"></ol></details>';
+
+        panel.querySelector("h3").textContent = id + ". " + typeName + " 연습 노트";
+        practiceCell.append(panel);
+        practiceRow.append(practiceCell);
+        row.insertAdjacentElement("afterend", practiceRow);
+        practiceRows.set(id, practiceRow);
+
+        const form = panel.querySelector(".practice-form");
+        const koInput = form.elements.ko;
+        const enInput = form.elements.en;
+        const status = panel.querySelector(".practice-status");
+        const details = panel.querySelector(".saved-details");
+        const summary = details.querySelector("summary");
+        const list = details.querySelector(".pair-list");
+        const emptyNote = panel.querySelector(".practice-empty");
+
+        function renderPairs() {
+          const pairs = Array.isArray(practiceData[id]) ? practiceData[id] : [];
+          summary.textContent = "저장된 연습 " + pairs.length + "개 — 열기 / 닫기";
+          details.hidden = pairs.length === 0;
+          emptyNote.hidden = pairs.length > 0;
+          list.replaceChildren();
+
+          pairs.forEach((pair, index) => {
+            const item = document.createElement("li");
+            item.className = "pair-card";
+
+            [["한국어", pair.ko], ["영어", pair.en]].forEach(([label, value]) => {
+              const text = document.createElement("div");
+              text.className = "pair-text";
+              const strong = document.createElement("strong");
+              strong.textContent = label;
+              const paragraph = document.createElement("p");
+              paragraph.textContent = value;
+              text.append(strong, paragraph);
+              item.append(text);
+            });
+
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "delete-pair";
+            remove.textContent = "삭제";
+            remove.setAttribute("aria-label", id + "번 패턴의 " + (index + 1) + "번째 연습 쌍 삭제");
+            remove.addEventListener("click", () => {
+              if (!window.confirm("이 연습 쌍을 삭제할까요?")) return;
+              practiceData[id].splice(index, 1);
+              if (practiceData[id].length === 0) delete practiceData[id];
+              persistPractice();
+              renderPairs();
+            });
+            item.append(remove);
+            list.append(item);
+          });
+        }
+
+        toggle.addEventListener("click", () => {
+          const willOpen = row.dataset.practiceOpen !== "true";
+          row.dataset.practiceOpen = String(willOpen);
+          practiceRow.hidden = !willOpen;
+          toggle.setAttribute("aria-expanded", String(willOpen));
+          toggle.textContent = willOpen ? "−" : "+";
+          toggle.setAttribute("aria-label", id + "번 패턴 연습 기록 " + (willOpen ? "닫기" : "열기"));
+          toggle.title = willOpen ? "연습 기록 닫기" : "연습 기록 열기";
+          if (willOpen) koInput.focus();
+        });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const ko = koInput.value.trim();
+          const en = enInput.value.trim();
+
+          status.classList.remove("error");
+          if (!ko || !en) {
+            status.textContent = "한국어 예문과 영어 작문을 모두 입력해 주세요.";
+            status.classList.add("error");
+            (ko ? enInput : koInput).focus();
+            return;
+          }
+
+          if (!Array.isArray(practiceData[id])) practiceData[id] = [];
+          practiceData[id].push({ ko, en, savedAt: new Date().toISOString() });
+
+          if (!persistPractice()) {
+            practiceData[id].pop();
+            status.textContent = "저장 공간이 부족해 저장하지 못했습니다.";
+            status.classList.add("error");
+            return;
+          }
+
+          form.reset();
+          status.textContent = "";
+          details.open = true;
+          renderPairs();
+          koInput.focus();
+        });
+
+        renderPairs();
+      });
+
+      function update() {
+        const query = normalize(search.value);
+        const selectedSkill = skillFilter.value;
+        let visible = 0;
+
+        rows.forEach((row) => {
+          const rowSkill = row.dataset.skill;
+          const matchesGroup = activeGroup === 'all' || row.dataset.group === activeGroup;
+          const matchesSkill = selectedSkill === "all" ||
+            (selectedSkill === "both" && rowSkill === "both") ||
+            (selectedSkill !== "both" && (rowSkill === selectedSkill || rowSkill === "both"));
+          const matchesQuery = !query || normalize(row.textContent).includes(query);
+          const show = matchesGroup && matchesSkill && matchesQuery;
+          row.hidden = !show;
+          const id = row.querySelector(".num").textContent.trim();
+          const practiceRow = practiceRows.get(id);
+          practiceRow.hidden = !show || row.dataset.practiceOpen !== "true";
+          if (show) visible += 1;
+        });
+
+        count.textContent = `${visible}개`;
+        empty.style.display = visible ? 'none' : 'block';
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activeGroup = button.dataset.filter;
+          buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+          update();
+        });
+      });
+
+      search.addEventListener('input', update);
+      skillFilter.addEventListener("change", update);
+      update();
+    })();
+  </script>
+</body>
+</html>
