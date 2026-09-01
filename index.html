@@ -252,6 +252,44 @@
     .data-status.error { color: #b34531; }
     .data-status:empty { display: none; }
 
+    .english-list-panel {
+      margin: 0 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+    }
+
+    .english-list-panel summary {
+      padding: 12px 14px;
+      color: var(--ink);
+      font-size: .86rem;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .english-list-panel summary::marker { color: var(--teal); }
+
+    .english-sentence-list {
+      margin: 0;
+      padding: 0 18px 14px 42px;
+    }
+
+    .english-sentence-list li {
+      padding: 9px 4px;
+      color: #354c61;
+      border-top: 1px solid #edf0f1;
+      overflow-wrap: anywhere;
+    }
+
+    .english-list-empty {
+      margin: 0;
+      padding: 4px 14px 14px;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .english-list-empty[hidden] { display: none; }
+
     .formula {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
@@ -677,6 +715,7 @@
       .page { width: 100%; margin: 0; }
       .hero { padding: 28px; border-radius: 0; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
       .toolbar, .data-actions, footer { display: none; }
+      .toolbar, .data-actions, .english-list-panel, footer { display: none; }
       .section { break-inside: avoid; margin-top: 14px; padding: 18px; box-shadow: none; }
       .table-shell { overflow: visible; }
       th, td { padding: 9px; }
@@ -741,6 +780,12 @@
         <button id="clear-practice" class="danger-button" type="button">전체 삭제</button>
         <span id="data-status" class="data-status" aria-live="polite"></span>
       </div>
+
+      <details id="english-list-panel" class="english-list-panel">
+        <summary id="english-list-summary">저장된 영문 리스트 0개</summary>
+        <p id="english-list-empty" class="english-list-empty">저장된 영문 문장이 없습니다.</p>
+        <ol id="english-sentence-list" class="english-sentence-list"></ol>
+      </details>
 
       <div class="table-shell">
         <table id="patterns-table">
@@ -999,6 +1044,9 @@
       const jsonFile = document.querySelector("#json-file");
       const clearButton = document.querySelector("#clear-practice");
       const dataStatus = document.querySelector("#data-status");
+      const englishListSummary = document.querySelector("#english-list-summary");
+      const englishListEmpty = document.querySelector("#english-list-empty");
+      const englishSentenceList = document.querySelector("#english-sentence-list");
       let activeGroup = 'all';
       let practiceData = {};
       let leftPageAt = 0;
@@ -1020,6 +1068,24 @@
         } catch (error) {
           return false;
         }
+      }
+
+      function renderEnglishList() {
+        const sentences = Object.values(practiceData)
+          .filter((pairs) => Array.isArray(pairs))
+          .flatMap((pairs) => pairs)
+          .filter((pair) => pair && typeof pair.en === "string" && pair.en.trim())
+          .sort((a, b) => String(b.savedAt || "").localeCompare(String(a.savedAt || "")));
+
+        englishListSummary.textContent = "저장된 영문 리스트 " + sentences.length + "개";
+        englishListEmpty.hidden = sentences.length > 0;
+        englishSentenceList.replaceChildren();
+
+        sentences.forEach((pair) => {
+          const item = document.createElement("li");
+          item.textContent = pair.en.trim();
+          englishSentenceList.append(item);
+        });
       }
 
       rows.forEach((row) => {
@@ -1114,6 +1180,7 @@
               if (practiceData[id].length === 0) delete practiceData[id];
               persistPractice();
               renderPairs();
+              renderEnglishList();
             });
             item.append(remove);
             list.append(item);
@@ -1128,6 +1195,7 @@
           toggle.textContent = willOpen ? "−" : "+";
           toggle.setAttribute("aria-label", id + "번 패턴 연습 기록 " + (willOpen ? "닫기" : "열기"));
           toggle.title = willOpen ? "연습 기록 닫기" : "연습 기록 열기";
+          if (willOpen && !details.hidden) details.open = true;
           if (willOpen) koInput.focus();
         });
 
@@ -1158,6 +1226,7 @@
           status.textContent = "";
           details.open = true;
           renderPairs();
+          renderEnglishList();
           koInput.focus();
         });
 
@@ -1165,8 +1234,11 @@
         renderPairs();
       });
 
+      renderEnglishList();
+
       function renderAllPairs() {
         pairRenderers.forEach((render) => render());
+        renderEnglishList();
       }
 
       function setDataStatus(message, isError = false) {
