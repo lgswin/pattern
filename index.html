@@ -213,6 +213,42 @@
       font-weight: 800;
     }
 
+    .data-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: -4px 0 18px;
+      padding: 10px;
+      border-radius: 13px;
+      background: var(--navy-soft);
+    }
+
+    .data-actions button { background: #fff; }
+    .data-actions button:hover { background: var(--teal-soft); }
+
+    .data-actions .danger-button {
+      border-color: #e7c1b9;
+      color: #a34332;
+      background: #fff7f5;
+    }
+
+    .data-actions .danger-button:hover {
+      border-color: var(--coral);
+      color: #8f3323;
+      background: var(--coral-soft);
+    }
+
+    .data-status {
+      margin-left: auto;
+      color: var(--teal);
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .data-status.error { color: #b34531; }
+    .data-status:empty { display: none; }
+
     .formula {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
@@ -590,6 +626,7 @@
         scrollbar-width: thin;
       }
       .filters button { flex: 0 0 auto; }
+      .data-status { flex-basis: 100%; margin-left: 0; }
       .print-button { display: none; }
       .section { padding: 20px 14px; }
       .formula { grid-template-columns: 1fr; gap: 10px; }
@@ -636,7 +673,7 @@
       body { background: #fff; color: #111; font-size: 9.5pt; }
       .page { width: 100%; margin: 0; }
       .hero { padding: 28px; border-radius: 0; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-      .toolbar, footer { display: none; }
+      .toolbar, .data-actions, footer { display: none; }
       .section { break-inside: avoid; margin-top: 14px; padding: 18px; box-shadow: none; }
       .table-shell { overflow: visible; }
       th, td { padding: 9px; }
@@ -692,6 +729,14 @@
           <p>활용 표시를 참고하고, 각 유형의 ‘연습 기록’을 열어 한국어→영어 작문 쌍을 계속 저장하세요.</p>
         </div>
         <span class="count" id="result-count" aria-live="polite">100개</span>
+      </div>
+
+      <div class="data-actions" aria-label="연습 데이터 관리">
+        <button id="export-json" type="button">JSON 백업</button>
+        <button id="import-json" type="button">JSON 추가／복원</button>
+        <input id="json-file" type="file" accept=".json,application/json" hidden>
+        <button id="clear-practice" class="danger-button" type="button">전체 삭제</button>
+        <span id="data-status" class="data-status" aria-live="polite"></span>
       </div>
 
       <div class="table-shell">
@@ -944,7 +989,13 @@
       const count = document.querySelector('#result-count');
       const empty = document.querySelector('#empty-state');
       const practiceRows = new Map();
+      const pairRenderers = new Map();
       const storageKey = "ielts-pattern-practice-v1";
+      const exportButton = document.querySelector("#export-json");
+      const importButton = document.querySelector("#import-json");
+      const jsonFile = document.querySelector("#json-file");
+      const clearButton = document.querySelector("#clear-practice");
+      const dataStatus = document.querySelector("#data-status");
       let activeGroup = 'all';
       let practiceData = {};
 
@@ -1105,7 +1156,98 @@
           koInput.focus();
         });
 
+        pairRenderers.set(id, renderPairs);
         renderPairs();
+      });
+
+      function renderAllPairs() {
+        pairRenderers.forEach((render) => render());
+      }
+
+      function setDataStatus(message, isError = false) {
+        dataStatus.textContent = message;
+        dataStatus.classList.toggle("error", isError);
+      }
+
+      exportButton.addEventListener("click", () => {
+        const backup = {
+          format: "ielts-pattern-practice",
+          version: 1,
+          exportedAt: new Date().toISOString(),
+          patterns: practiceData
+        };
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "ielts-practice-" + new Date().toISOString().slice(0, 10) + ".json";
+        document.body.append(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        setDataStatus("JSON 백업 파일을 저장했습니다.");
+      });
+
+      importButton.addEventListener("click", () => jsonFile.click());
+
+      jsonFile.addEventListener("change", async () => {
+        const file = jsonFile.files && jsonFile.files[0];
+        if (!file) return;
+
+        try {
+          const backup = JSON.parse(await file.text());
+          if (!backup || backup.format !== "ielts-pattern-practice" || backup.version !== 1 ||
+              !backup.patterns || typeof backup.patterns !== "object" || Array.isArray(backup.patterns)) {
+            throw new Error("invalid-format");
+          }
+
+          const merged = JSON.parse(JSON.stringify(practiceData));
+          let added = 0;
+
+          Object.entries(backup.patterns).forEach(([rawId, pairs]) => {
+            const normalizedId = rawId.length < 2 ? rawId.padStart(2, "0") : rawId;
+            if (!practiceRows.has(normalizedId) || !Array.isArray(pairs)) return;
+            if (!Array.isArray(merged[normalizedId])) merged[normalizedId] = [];
+
+            pairs.forEach((pair) => {
+              if (!pair || typeof pair.ko !== "string" || typeof pair.en !== "string") return;
+              const ko = pair.ko.trim();
+              const en = pair.en.trim();
+              if (!ko || !en) return;
+              merged[normalizedId].push({
+                ko,
+                en,
+                savedAt: typeof pair.savedAt === "string" ? pair.savedAt : new Date().toISOString()
+              });
+              added += 1;
+            });
+          });
+
+          const previousData = practiceData;
+          practiceData = merged;
+          if (!persistPractice()) {
+            practiceData = previousData;
+            throw new Error("storage-full");
+          }
+
+          renderAllPairs();
+          setDataStatus(added + "개의 연습 쌍을 기존 기록에 추가했습니다.");
+        } catch (error) {
+          const message = error.message === "storage-full"
+            ? "저장 공간이 부족해 복원하지 못했습니다."
+            : "지원되는 JSON 백업 파일이 아닙니다.";
+          setDataStatus(message, true);
+        } finally {
+          jsonFile.value = "";
+        }
+      });
+
+      clearButton.addEventListener("click", () => {
+        if (!window.confirm("저장된 모든 패턴의 연습 내용을 삭제할까요? 이 작업은 되돌릴 수 없습니다.")) return;
+        practiceData = {};
+        localStorage.removeItem(storageKey);
+        renderAllPairs();
+        setDataStatus("모든 연습 내용을 삭제했습니다.");
       });
 
       function update() {
