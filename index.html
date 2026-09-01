@@ -2,6 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="한국어 사고 구조와 영어 표현을 연결하는 IELTS Writing &amp; Speaking 문장 패턴 100가지">
   <title>IELTS Writing &amp; Speaking 문장 패턴 100</title>
@@ -998,6 +1001,8 @@
       const dataStatus = document.querySelector("#data-status");
       let activeGroup = 'all';
       let practiceData = {};
+      let leftPageAt = 0;
+      let skipNextReturnRefresh = false;
 
       try {
         const stored = JSON.parse(localStorage.getItem(storageKey) || "{}");
@@ -1188,7 +1193,10 @@
         setDataStatus("JSON 백업 파일을 저장했습니다.");
       });
 
-      importButton.addEventListener("click", () => jsonFile.click());
+      importButton.addEventListener("click", () => {
+        skipNextReturnRefresh = true;
+        jsonFile.click();
+      });
 
       jsonFile.addEventListener("change", async () => {
         const file = jsonFile.files && jsonFile.files[0];
@@ -1248,6 +1256,31 @@
         localStorage.removeItem(storageKey);
         renderAllPairs();
         setDataStatus("모든 연습 내용을 삭제했습니다.");
+      });
+
+      function markPageAsLeft() {
+        leftPageAt = Date.now();
+      }
+
+      function refreshAfterReturn() {
+        if (!leftPageAt || Date.now() - leftPageAt < 500) return;
+        leftPageAt = 0;
+
+        if (skipNextReturnRefresh) {
+          skipNextReturnRefresh = false;
+          return;
+        }
+
+        const hasUnsavedInput = [...document.querySelectorAll(".practice-form textarea")]
+          .some((field) => field.value.trim());
+        if (!hasUnsavedInput) window.location.reload();
+      }
+
+      window.addEventListener("blur", markPageAsLeft);
+      window.addEventListener("focus", () => window.setTimeout(refreshAfterReturn, 80));
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) markPageAsLeft();
+        else window.setTimeout(refreshAfterReturn, 80);
       });
 
       function update() {
