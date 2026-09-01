@@ -1886,6 +1886,9 @@
         skipNextReturnRefresh = true;
         jsonFile.click();
       });
+      importButton.addEventListener("click", () => {
+        jsonFile.click();
+      });
 
       jsonFile.addEventListener("change", async () => {
         const file = jsonFile.files && jsonFile.files[0];
@@ -1950,6 +1953,27 @@
       function markPageAsLeft() {
         leftPageAt = Date.now();
       }
+      function syncPracticeFromStorage() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(storageKey) || "{}");
+          if (!stored || typeof stored !== "object" || Array.isArray(stored)) return;
+          if (JSON.stringify(stored) === JSON.stringify(practiceData)) return;
+
+          practiceData = stored;
+          renderAllPairs();
+          setDataStatus("다른 창에서 변경된 저장 내용을 반영했습니다.");
+        } catch (error) {
+          // 잘못된 외부 데이터는 현재 입력 화면과 저장 내용을 보호하기 위해 무시합니다.
+        }
+      }
+
+      window.addEventListener("focus", syncPracticeFromStorage);
+      window.addEventListener("storage", (event) => {
+        if (event.key === storageKey || event.key === null) syncPracticeFromStorage();
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) syncPracticeFromStorage();
+      });
 
       function refreshAfterReturn() {
         if (!leftPageAt || Date.now() - leftPageAt < 500) return;
