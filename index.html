@@ -485,7 +485,7 @@
 
     .immersion-controls {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(160px, 1.35fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, .9fr) minmax(130px, 1.15fr) minmax(150px, 1.25fr) minmax(0, .9fr);
       gap: 10px;
     }
 
@@ -513,6 +513,24 @@
       border-color: #a0eee5;
       color: #092e37;
       background: #a0eee5;
+    }
+
+    .immersion-controls .immersion-read {
+      border-color: rgba(255, 179, 107, .52);
+      color: #ffe1c5;
+      background: rgba(229, 107, 82, .10);
+    }
+
+    .immersion-controls .immersion-read:hover {
+      border-color: #ffbd80;
+      color: #fff3e8;
+      background: rgba(229, 107, 82, .18);
+    }
+
+    .immersion-controls .immersion-read[aria-pressed="true"] {
+      border-color: #ffb36b;
+      color: #402618;
+      background: #ffb36b;
     }
 
     .immersion-options {
@@ -983,7 +1001,7 @@
       .immersion-progress-row > span:first-child { display: none; }
       .immersion-card { padding: 28px 20px; border-radius: 24px; }
       .immersion-sentence { font-size: clamp(1.45rem, 7.2vw, 2.3rem); }
-      .immersion-controls { grid-template-columns: 1fr 1.35fr 1fr; gap: 7px; }
+      .immersion-controls { grid-template-columns: 1fr 1fr; gap: 7px; }
       .immersion-controls button { min-width: 0; min-height: 52px; padding-inline: 7px; }
       .immersion-options { gap: 10px 14px; }
       .immersion-shortcuts { display: none; }
@@ -1188,6 +1206,7 @@
 
       <div class="immersion-controls" aria-label="몰입학습 이동 및 재생 제어">
         <button id="immersion-prev" type="button" aria-label="이전 문장">← 이전</button>
+        <button id="immersion-read" class="immersion-read" type="button" aria-pressed="false">🔊 문장 읽기</button>
         <button id="immersion-play" class="immersion-play" type="button">시작</button>
         <button id="immersion-next" type="button" aria-label="다음 문장">다음 →</button>
       </div>
@@ -1198,6 +1217,10 @@
           <span>자동 반복</span>
         </label>
         <label class="immersion-option">
+          <input id="immersion-auto-read" type="checkbox" checked>
+          <span>카드 자동 읽기</span>
+        </label>
+        <label class="immersion-option">
           <span>문장 간격</span>
           <select id="immersion-interval" aria-label="자동 반복 문장 간격">
             <option value="3">3초</option>
@@ -1205,8 +1228,16 @@
             <option value="8">8초</option>
           </select>
         </label>
+        <label class="immersion-option">
+          <span>읽기 속도</span>
+          <select id="immersion-speech-rate" aria-label="영어 문장 읽기 속도">
+            <option value="0.85">천천히</option>
+            <option value="1" selected>보통</option>
+            <option value="1.15">빠르게</option>
+          </select>
+        </label>
         <span id="immersion-status" class="immersion-status" aria-live="polite">일시정지</span>
-        <span class="immersion-shortcuts">← → 이동 · Space 재생 · Esc 종료</span>
+        <span class="immersion-shortcuts">← → 이동 · R 읽기 · Space 재생 · Esc 종료</span>
       </div>
     </div>
   </section>
@@ -1389,11 +1420,15 @@
       const immersionProgressBar = document.querySelector("#immersion-progress-bar");
       const immersionPrev = document.querySelector("#immersion-prev");
       const immersionNext = document.querySelector("#immersion-next");
+      const immersionRead = document.querySelector("#immersion-read");
       const immersionPlay = document.querySelector("#immersion-play");
       const immersionAuto = document.querySelector("#immersion-auto");
+      const immersionAutoRead = document.querySelector("#immersion-auto-read");
       const immersionInterval = document.querySelector("#immersion-interval");
+      const immersionSpeechRate = document.querySelector("#immersion-speech-rate");
       const immersionStatus = document.querySelector("#immersion-status");
       const pageMain = document.querySelector("main.page");
+      const canReadAloud = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
       let activeGroup = 'all';
       let practiceData = {};
       let leftPageAt = 0;
@@ -1403,6 +1438,9 @@
       let immersionTimer = null;
       let immersionPlaying = false;
       let immersionPreviousFocus = null;
+      let immersionSpeechTimer = null;
+      let immersionSpeaking = false;
+      let immersionSpeechGeneration = 0;
 
       try {
         const stored = JSON.parse(localStorage.getItem(storageKey) || "{}");
@@ -1449,8 +1487,81 @@
         });
       }
 
+      function setImmersionSpeaking(speaking) {
+        immersionSpeaking = Boolean(speaking);
+        immersionRead.textContent = immersionSpeaking ? "■ 읽기 중지" : "🔊 문장 읽기";
+        immersionRead.setAttribute("aria-pressed", String(immersionSpeaking));
+      }
+
+      function cancelImmersionReading(showStatus = false) {
+        immersionSpeechGeneration += 1;
+        window.clearTimeout(immersionSpeechTimer);
+        immersionSpeechTimer = null;
+        if (canReadAloud) window.speechSynthesis.cancel();
+        setImmersionSpeaking(false);
+        if (showStatus) {
+          immersionStatus.textContent = immersionPlaying ? "자동 재생 중" : "읽기 중지";
+        }
+      }
+
+      function getPreferredEnglishVoice() {
+        if (!canReadAloud) return null;
+        const voices = window.speechSynthesis.getVoices();
+        return voices.find((voice) => voice.lang.toLowerCase().startsWith("en-gb")) ||
+          voices.find((voice) => voice.lang.toLowerCase().startsWith("en-ca")) ||
+          voices.find((voice) => voice.lang.toLowerCase().startsWith("en-us")) ||
+          voices.find((voice) => voice.lang.toLowerCase().startsWith("en")) ||
+          null;
+      }
+
+      function speakCurrentSentence() {
+        if (!canReadAloud) {
+          immersionStatus.textContent = "이 브라우저에서는 음성 읽기를 지원하지 않습니다.";
+          return;
+        }
+        if (!immersionItems.length) return;
+
+        cancelImmersionReading(false);
+        const generation = immersionSpeechGeneration;
+        const utterance = new SpeechSynthesisUtterance(immersionItems[immersionIndex].en.trim());
+        const voice = getPreferredEnglishVoice();
+        if (voice) utterance.voice = voice;
+        utterance.lang = voice ? voice.lang : "en-GB";
+        utterance.rate = Number(immersionSpeechRate.value);
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        utterance.onstart = () => {
+          if (generation !== immersionSpeechGeneration) return;
+          setImmersionSpeaking(true);
+          immersionStatus.textContent = "영어 문장 읽는 중";
+        };
+        utterance.onend = () => {
+          if (generation !== immersionSpeechGeneration) return;
+          setImmersionSpeaking(false);
+          immersionStatus.textContent = immersionPlaying ? "자동 재생 중" : "읽기 완료";
+        };
+        utterance.onerror = () => {
+          if (generation !== immersionSpeechGeneration) return;
+          setImmersionSpeaking(false);
+          immersionStatus.textContent = "음성을 재생하지 못했습니다.";
+        };
+
+        setImmersionSpeaking(true);
+        immersionStatus.textContent = "읽기 준비 중";
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function scheduleCurrentSentenceReading() {
+        window.clearTimeout(immersionSpeechTimer);
+        immersionSpeechTimer = null;
+        if (!canReadAloud || !immersionAutoRead.checked || immersionMode.hidden) return;
+        immersionSpeechTimer = window.setTimeout(speakCurrentSentence, 180);
+      }
+
       function renderImmersionCard() {
         if (!immersionItems.length) return;
+        cancelImmersionReading(false);
         const item = immersionItems[immersionIndex];
         immersionSentence.textContent = item.en.trim();
         immersionCardLabel.textContent = String(item.patternId || "").padStart(2, "0") + "번 패턴";
@@ -1460,6 +1571,7 @@
         immersionCard.classList.remove("is-changing");
         void immersionCard.offsetWidth;
         immersionCard.classList.add("is-changing");
+        scheduleCurrentSentenceReading();
       }
 
       function scheduleImmersionAdvance() {
@@ -1467,20 +1579,32 @@
         immersionTimer = null;
         if (!immersionPlaying || !immersionAuto.checked) return;
 
-        immersionTimer = window.setTimeout(() => {
+        const advanceWhenReadingStops = () => {
+          if (!immersionPlaying || !immersionAuto.checked) return;
+          if (immersionSpeaking) {
+            immersionTimer = window.setTimeout(advanceWhenReadingStops, 250);
+            return;
+          }
           immersionIndex = (immersionIndex + 1) % immersionItems.length;
           renderImmersionCard();
           scheduleImmersionAdvance();
-        }, Number(immersionInterval.value) * 1000);
+        };
+
+        immersionTimer = window.setTimeout(
+          advanceWhenReadingStops,
+          Number(immersionInterval.value) * 1000
+        );
       }
 
       function setImmersionPlaying(playing) {
+        const wasPlaying = immersionPlaying;
         immersionPlaying = Boolean(playing && immersionItems.length);
         window.clearTimeout(immersionTimer);
         immersionTimer = null;
         immersionPlay.textContent = immersionPlaying ? "일시정지" : "시작";
         immersionPlay.setAttribute("aria-pressed", String(immersionPlaying));
         immersionStatus.textContent = immersionPlaying ? "자동 재생 중" : "일시정지";
+        if (wasPlaying && !immersionPlaying) cancelImmersionReading(false);
         if (immersionPlaying) scheduleImmersionAdvance();
       }
 
@@ -1505,12 +1629,16 @@
         pageMain.inert = true;
         renderImmersionCard();
         setImmersionPlaying(false);
+        if (!canReadAloud) {
+          immersionStatus.textContent = "이 브라우저에서는 음성 읽기를 지원하지 않습니다.";
+        }
         window.requestAnimationFrame(() => immersionPlay.focus());
       }
 
       function closeImmersion() {
         if (immersionMode.hidden) return;
         setImmersionPlaying(false);
+        cancelImmersionReading(false);
         immersionMode.hidden = true;
         document.body.classList.remove("immersion-open");
         pageMain.inert = false;
@@ -1523,6 +1651,10 @@
       closeImmersionButton.addEventListener("click", closeImmersion);
       immersionPrev.addEventListener("click", () => moveImmersion(-1));
       immersionNext.addEventListener("click", () => moveImmersion(1));
+      immersionRead.addEventListener("click", () => {
+        if (immersionSpeaking) cancelImmersionReading(true);
+        else speakCurrentSentence();
+      });
       immersionPlay.addEventListener("click", () => {
         if (!immersionPlaying && !immersionAuto.checked) immersionAuto.checked = true;
         setImmersionPlaying(!immersionPlaying);
@@ -1531,9 +1663,22 @@
         if (!immersionAuto.checked && immersionPlaying) setImmersionPlaying(false);
         else if (immersionAuto.checked) immersionStatus.textContent = "재생 준비";
       });
+      immersionAutoRead.addEventListener("change", () => {
+        if (immersionAutoRead.checked) speakCurrentSentence();
+        else cancelImmersionReading(true);
+      });
       immersionInterval.addEventListener("change", () => {
         if (immersionPlaying) scheduleImmersionAdvance();
       });
+      immersionSpeechRate.addEventListener("change", () => {
+        if (immersionSpeaking) speakCurrentSentence();
+      });
+
+      if (!canReadAloud) {
+        immersionRead.disabled = true;
+        immersionAutoRead.disabled = true;
+        immersionSpeechRate.disabled = true;
+      }
 
       document.addEventListener("keydown", (event) => {
         if (immersionMode.hidden) return;
@@ -1542,7 +1687,7 @@
           closeImmersion();
           return;
         }
-        if (event.target === immersionInterval || event.target === immersionAuto) return;
+        if (["BUTTON", "INPUT", "SELECT"].includes(event.target.tagName)) return;
         if (event.key === "ArrowLeft") {
           event.preventDefault();
           moveImmersion(-1);
@@ -1553,6 +1698,10 @@
           event.preventDefault();
           if (!immersionPlaying && !immersionAuto.checked) immersionAuto.checked = true;
           setImmersionPlaying(!immersionPlaying);
+        } else if (event.key.toLowerCase() === "r") {
+          event.preventDefault();
+          if (immersionSpeaking) cancelImmersionReading(true);
+          else speakCurrentSentence();
         }
       });
 
