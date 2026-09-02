@@ -1402,6 +1402,7 @@
       const practiceRows = new Map();
       const pairRenderers = new Map();
       const storageKey = "ielts-pattern-practice-v1";
+      const openStateKey = "ielts-pattern-open-state-v1";
       const exportButton = document.querySelector("#export-json");
       const importButton = document.querySelector("#import-json");
       const jsonFile = document.querySelector("#json-file");
@@ -1431,6 +1432,7 @@
       const canReadAloud = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
       let activeGroup = 'all';
       let practiceData = {};
+      let practiceOpenState = {};
       let leftPageAt = 0;
       let skipNextReturnRefresh = false;
       let immersionItems = [];
@@ -1449,6 +1451,15 @@
         practiceData = {};
       }
 
+      try {
+        const storedOpenState = JSON.parse(localStorage.getItem(openStateKey) || "{}");
+        if (storedOpenState && typeof storedOpenState === "object" && !Array.isArray(storedOpenState)) {
+          practiceOpenState = storedOpenState;
+        }
+      } catch (error) {
+        practiceOpenState = {};
+      }
+
       const normalize = (text) => text.toLocaleLowerCase('ko-KR').replace(/\s+/g, ' ').trim();
 
       function persistPractice() {
@@ -1457,6 +1468,14 @@
           return true;
         } catch (error) {
           return false;
+        }
+      }
+
+      function persistOpenState() {
+        try {
+          localStorage.setItem(openStateKey, JSON.stringify(practiceOpenState));
+        } catch (error) {
+          // 저장 공간을 사용할 수 없는 경우에도 현재 화면의 열림/닫힘 동작은 유지합니다.
         }
       }
 
@@ -1710,8 +1729,10 @@
         const typeCell = row.querySelector(".type-name");
         const typeName = typeCell.childNodes[0].textContent.trim();
         const skill = row.dataset.skill || "both";
+        const isInitiallyOpen = practiceOpenState[id] === true;
         row.dataset.skill = skill;
         row.dataset.practiceOpen = "false";
+        row.dataset.practiceOpen = String(isInitiallyOpen);
 
         const badge = document.createElement("span");
         badge.className = "skill-badge " + skill;
@@ -1725,6 +1746,10 @@
         toggle.setAttribute("aria-label", id + "번 패턴 연습 기록 열기");
         toggle.title = "연습 기록 열기";
         toggle.setAttribute("aria-expanded", "false");
+        toggle.textContent = isInitiallyOpen ? "−" : "+";
+        toggle.setAttribute("aria-label", id + "번 패턴 연습 기록 " + (isInitiallyOpen ? "닫기" : "열기"));
+        toggle.title = isInitiallyOpen ? "연습 기록 닫기" : "연습 기록 열기";
+        toggle.setAttribute("aria-expanded", String(isInitiallyOpen));
         toggle.setAttribute("aria-controls", "practice-panel-" + id);
         typeCell.append(toggle);
 
@@ -1732,6 +1757,7 @@
         practiceRow.className = "practice-row";
         practiceRow.dataset.owner = id;
         practiceRow.hidden = true;
+        practiceRow.hidden = !isInitiallyOpen;
 
         const practiceCell = document.createElement("td");
         practiceCell.colSpan = 6;
@@ -1812,6 +1838,9 @@
           toggle.textContent = willOpen ? "−" : "+";
           toggle.setAttribute("aria-label", id + "번 패턴 연습 기록 " + (willOpen ? "닫기" : "열기"));
           toggle.title = willOpen ? "연습 기록 닫기" : "연습 기록 열기";
+          if (willOpen) practiceOpenState[id] = true;
+          else delete practiceOpenState[id];
+          persistOpenState();
           if (willOpen && !details.hidden) details.open = true;
           if (willOpen) koInput.focus();
         });
@@ -1849,6 +1878,7 @@
 
         pairRenderers.set(id, renderPairs);
         renderPairs();
+        if (isInitiallyOpen && !details.hidden) details.open = true;
       });
 
       renderEnglishList();
