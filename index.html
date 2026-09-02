@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ko">
 <head>
@@ -562,6 +563,8 @@
       font: inherit;
       font-weight: 800;
     }
+
+    .immersion-option .immersion-voice-select { max-width: 240px; }
 
     .immersion-status {
       color: #99e7dd;
@@ -1229,6 +1232,12 @@
           </select>
         </label>
         <label class="immersion-option">
+          <span>음성</span>
+          <select id="immersion-voice" class="immersion-voice-select" aria-label="영어 문장 음성 선택">
+            <option value="">자동 선택</option>
+          </select>
+        </label>
+        <label class="immersion-option">
           <span>읽기 속도</span>
           <select id="immersion-speech-rate" aria-label="영어 문장 읽기 속도">
             <option value="0.85">천천히</option>
@@ -1403,6 +1412,7 @@
       const pairRenderers = new Map();
       const storageKey = "ielts-pattern-practice-v1";
       const openStateKey = "ielts-pattern-open-state-v1";
+      const voiceStorageKey = "ielts-immersion-voice-v1";
       const exportButton = document.querySelector("#export-json");
       const importButton = document.querySelector("#import-json");
       const jsonFile = document.querySelector("#json-file");
@@ -1426,6 +1436,7 @@
       const immersionAuto = document.querySelector("#immersion-auto");
       const immersionAutoRead = document.querySelector("#immersion-auto-read");
       const immersionInterval = document.querySelector("#immersion-interval");
+      const immersionVoice = document.querySelector("#immersion-voice");
       const immersionSpeechRate = document.querySelector("#immersion-speech-rate");
       const immersionStatus = document.querySelector("#immersion-status");
       const pageMain = document.querySelector("main.page");
@@ -1523,13 +1534,52 @@
         }
       }
 
+      function getVoiceKey(voice) {
+        return [voice.voiceURI || "", voice.name || "", voice.lang || ""].join("||");
+      }
+
+      function getEnglishVoices() {
+        if (!canReadAloud) return [];
+        return window.speechSynthesis.getVoices()
+          .filter((voice) => String(voice.lang || "").toLowerCase().startsWith("en"))
+          .sort((a, b) => (a.lang + a.name).localeCompare(b.lang + b.name));
+      }
+
+      function populateImmersionVoices() {
+        const voices = getEnglishVoices();
+        let savedVoice = "";
+        try {
+          savedVoice = localStorage.getItem(voiceStorageKey) || "";
+        } catch (error) {
+          savedVoice = "";
+        }
+        const preferredKey = immersionVoice.value || savedVoice;
+        const automatic = document.createElement("option");
+        automatic.value = "";
+        automatic.textContent = "자동 선택";
+        immersionVoice.replaceChildren(automatic);
+
+        voices.forEach((voice) => {
+          const option = document.createElement("option");
+          option.value = getVoiceKey(voice);
+          option.textContent = voice.name + " (" + voice.lang + ")" + (voice.default ? " · 기본" : "");
+          immersionVoice.append(option);
+        });
+
+        immersionVoice.value = voices.some((voice) => getVoiceKey(voice) === preferredKey)
+          ? preferredKey
+          : "";
+        immersionVoice.disabled = !canReadAloud;
+      }
+
       function getPreferredEnglishVoice() {
-        if (!canReadAloud) return null;
-        const voices = window.speechSynthesis.getVoices();
+        const voices = getEnglishVoices();
+        const selectedVoice = voices.find((voice) => getVoiceKey(voice) === immersionVoice.value);
+        if (selectedVoice) return selectedVoice;
         return voices.find((voice) => voice.lang.toLowerCase().startsWith("en-gb")) ||
           voices.find((voice) => voice.lang.toLowerCase().startsWith("en-ca")) ||
           voices.find((voice) => voice.lang.toLowerCase().startsWith("en-us")) ||
-          voices.find((voice) => voice.lang.toLowerCase().startsWith("en")) ||
+          voices[0] ||
           null;
       }
 
@@ -1689,13 +1739,33 @@
       immersionInterval.addEventListener("change", () => {
         if (immersionPlaying) scheduleImmersionAdvance();
       });
+      immersionVoice.addEventListener("change", () => {
+        try {
+          if (immersionVoice.value) localStorage.setItem(voiceStorageKey, immersionVoice.value);
+          else localStorage.removeItem(voiceStorageKey);
+        } catch (error) {
+          // 음성 선택 저장을 사용할 수 없어도 현재 재생에는 선택값을 적용합니다.
+        }
+        if (immersionSpeaking) speakCurrentSentence();
+        else immersionStatus.textContent = immersionVoice.value ? "선택한 음성을 적용했습니다." : "음성 자동 선택";
+      });
       immersionSpeechRate.addEventListener("change", () => {
         if (immersionSpeaking) speakCurrentSentence();
       });
 
+      populateImmersionVoices();
+      if (canReadAloud) {
+        if (typeof window.speechSynthesis.addEventListener === "function") {
+          window.speechSynthesis.addEventListener("voiceschanged", populateImmersionVoices);
+        } else {
+          window.speechSynthesis.onvoiceschanged = populateImmersionVoices;
+        }
+      }
+
       if (!canReadAloud) {
         immersionRead.disabled = true;
         immersionAutoRead.disabled = true;
+        immersionVoice.disabled = true;
         immersionSpeechRate.disabled = true;
       }
 
@@ -1731,7 +1801,6 @@
         const skill = row.dataset.skill || "both";
         const isInitiallyOpen = practiceOpenState[id] === true;
         row.dataset.skill = skill;
-        row.dataset.practiceOpen = "false";
         row.dataset.practiceOpen = String(isInitiallyOpen);
 
         const badge = document.createElement("span");
@@ -1742,10 +1811,6 @@
         const toggle = document.createElement("button");
         toggle.type = "button";
         toggle.className = "practice-toggle";
-        toggle.textContent = "+";
-        toggle.setAttribute("aria-label", id + "번 패턴 연습 기록 열기");
-        toggle.title = "연습 기록 열기";
-        toggle.setAttribute("aria-expanded", "false");
         toggle.textContent = isInitiallyOpen ? "−" : "+";
         toggle.setAttribute("aria-label", id + "번 패턴 연습 기록 " + (isInitiallyOpen ? "닫기" : "열기"));
         toggle.title = isInitiallyOpen ? "연습 기록 닫기" : "연습 기록 열기";
@@ -1756,7 +1821,6 @@
         const practiceRow = document.createElement("tr");
         practiceRow.className = "practice-row";
         practiceRow.dataset.owner = id;
-        practiceRow.hidden = true;
         practiceRow.hidden = !isInitiallyOpen;
 
         const practiceCell = document.createElement("td");
