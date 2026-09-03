@@ -259,6 +259,24 @@
       cursor: not-allowed;
     }
 
+    .data-actions .immersion-scope {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 6px;
+      color: var(--ink);
+      font-size: .8rem;
+      font-weight: 750;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .data-actions .immersion-scope input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--gold);
+    }
+
     .data-actions .danger-button {
       border-color: #e7c1b9;
       color: #a34332;
@@ -1110,6 +1128,10 @@
 
       <div class="data-actions" aria-label="연습 데이터 관리">
         <button id="open-immersion" class="immersion-launch" type="button" disabled>몰입학습</button>
+        <label class="immersion-scope">
+          <input id="immersion-favorites-only" type="checkbox">
+          <span>즐겨찾기만</span>
+        </label>
         <button id="export-json" type="button">JSON 백업</button>
         <button id="import-json" type="button">JSON 추가／복원</button>
         <input id="json-file" type="file" accept=".json,application/json" hidden>
@@ -1221,7 +1243,7 @@
         <span class="immersion-brand-mark" aria-hidden="true">IM</span>
         <span class="immersion-brand-text">
           <strong id="immersion-title">몰입학습</strong>
-          <span>저장한 영어 문장을 한 장씩</span>
+          <span id="immersion-subtitle">저장한 영어 문장을 한 장씩</span>
         </span>
       </div>
       <button id="close-immersion" class="immersion-exit" type="button" aria-label="몰입학습 종료">학습 종료 ×</button>
@@ -1229,7 +1251,7 @@
 
     <div class="immersion-stage">
       <div class="immersion-progress-row" aria-label="학습 진행률">
-        <span>Saved sentences</span>
+        <span id="immersion-scope-label">Saved sentences</span>
         <span class="immersion-progress-track" aria-hidden="true"><span id="immersion-progress-bar" class="immersion-progress-bar"></span></span>
         <span id="immersion-count" class="immersion-count">1 / 1</span>
       </div>
@@ -1249,6 +1271,10 @@
       </div>
 
       <div class="immersion-options">
+        <label class="immersion-option">
+          <input id="immersion-favorites-only-mode" type="checkbox">
+          <span>즐겨찾기만</span>
+        </label>
         <label class="immersion-option">
           <input id="immersion-auto" type="checkbox" checked>
           <span>자동 반복</span>
@@ -1447,6 +1473,7 @@
       const storageKey = "ielts-pattern-practice-v1";
       const openStateKey = "ielts-pattern-open-state-v1";
       const voiceStorageKey = "ielts-immersion-voice-v1";
+      const favoritesOnlyKey = "ielts-immersion-favorites-only-v1";
       const exportButton = document.querySelector("#export-json");
       const importButton = document.querySelector("#import-json");
       const jsonFile = document.querySelector("#json-file");
@@ -1457,7 +1484,11 @@
       const englishListEmpty = document.querySelector("#english-list-empty");
       const englishSentenceList = document.querySelector("#english-sentence-list");
       const openImmersionButton = document.querySelector("#open-immersion");
+      const immersionFavoritesOnly = document.querySelector("#immersion-favorites-only");
+      const immersionFavoritesOnlyMode = document.querySelector("#immersion-favorites-only-mode");
       const immersionMode = document.querySelector("#immersion-mode");
+      const immersionSubtitle = document.querySelector("#immersion-subtitle");
+      const immersionScopeLabel = document.querySelector("#immersion-scope-label");
       const closeImmersionButton = document.querySelector("#close-immersion");
       const immersionCard = document.querySelector("#immersion-card");
       const immersionCardLabel = document.querySelector("#immersion-card-label");
@@ -1504,6 +1535,15 @@
         }
       } catch (error) {
         practiceOpenState = {};
+      }
+
+      try {
+        const storedFavoritesOnly = localStorage.getItem(favoritesOnlyKey);
+        immersionFavoritesOnly.checked = storedFavoritesOnly === "1";
+        immersionFavoritesOnlyMode.checked = immersionFavoritesOnly.checked;
+      } catch (error) {
+        immersionFavoritesOnly.checked = false;
+        immersionFavoritesOnlyMode.checked = false;
       }
 
       const normalize = (text) => text.toLocaleLowerCase('ko-KR').replace(/\s+/g, ' ').trim();
@@ -1568,15 +1608,79 @@
         if (button) button.focus();
       }
 
+      function persistFavoritesOnly() {
+        try {
+          localStorage.setItem(favoritesOnlyKey, immersionFavoritesOnly.checked ? "1" : "0");
+        } catch (error) {
+          // 선택 저장을 사용할 수 없어도 현재 화면의 즐겨찾기 범위는 유지합니다.
+        }
+      }
+
+      function setFavoritesOnly(checked) {
+        immersionFavoritesOnly.checked = Boolean(checked);
+        immersionFavoritesOnlyMode.checked = immersionFavoritesOnly.checked;
+        persistFavoritesOnly();
+        updateImmersionLaunch();
+        updateImmersionScopeCopy();
+      }
+
+      function getFavoriteSentences() {
+        return getSavedSentences().filter((pair) => pair.favorite === true);
+      }
+
+      function getImmersionSentences() {
+        return immersionFavoritesOnly.checked ? getFavoriteSentences() : getSavedSentences();
+      }
+
+      function updateImmersionLaunch() {
+        const sentences = getSavedSentences();
+        const favorites = sentences.filter((pair) => pair.favorite === true);
+        const usingFavorites = immersionFavoritesOnly.checked;
+        const count = usingFavorites ? favorites.length : sentences.length;
+
+        openImmersionButton.disabled = count === 0;
+        if (usingFavorites) {
+          openImmersionButton.textContent = count ? "몰입학습 · 즐겨찾기 " + count : "몰입학습 · 즐겨찾기";
+        } else {
+          openImmersionButton.textContent = count ? "몰입학습 · " + count : "몰입학습";
+        }
+      }
+
+      function updateImmersionScopeCopy() {
+        const usingFavorites = immersionFavoritesOnly.checked;
+        immersionSubtitle.textContent = usingFavorites
+          ? "즐겨찾기한 영어 문장을 한 장씩"
+          : "저장한 영어 문장을 한 장씩";
+        immersionScopeLabel.textContent = usingFavorites ? "Favorite sentences" : "Saved sentences";
+      }
+
+      function applyImmersionScope() {
+        if (immersionMode.hidden) return;
+
+        const nextItems = getImmersionSentences();
+        if (!nextItems.length) {
+          setFavoritesOnly(false);
+          immersionStatus.textContent = "즐겨찾기한 문장이 없어 전체 문장으로 유지합니다.";
+          return;
+        }
+
+        const current = immersionItems[immersionIndex];
+        immersionItems = nextItems;
+        const keepIndex = current
+          ? nextItems.findIndex((item) =>
+              item.patternId === current.patternId && item.pairIndex === current.pairIndex)
+          : -1;
+        immersionIndex = keepIndex >= 0 ? keepIndex : 0;
+        renderImmersionCard();
+        if (immersionPlaying) scheduleImmersionAdvance();
+      }
+
       function renderEnglishList() {
         const sentences = getSavedSentences();
 
         englishListSummary.textContent = "저장된 영문 리스트 " + sentences.length + "개";
         englishListEmpty.hidden = sentences.length > 0;
-        openImmersionButton.disabled = sentences.length === 0;
-        openImmersionButton.textContent = sentences.length
-          ? "몰입학습 · " + sentences.length
-          : "몰입학습";
+        updateImmersionLaunch();
         englishSentenceList.replaceChildren();
 
         sentences.forEach((pair) => {
@@ -1771,9 +1875,14 @@
       }
 
       function openImmersion() {
-        immersionItems = getSavedSentences();
+        immersionItems = getImmersionSentences();
         if (!immersionItems.length) {
-          setDataStatus("저장된 영문 문장이 있어야 몰입학습을 시작할 수 있습니다.", true);
+          setDataStatus(
+            immersionFavoritesOnly.checked
+              ? "즐겨찾기한 영문 문장이 있어야 몰입학습을 시작할 수 있습니다."
+              : "저장된 영문 문장이 있어야 몰입학습을 시작할 수 있습니다.",
+            true
+          );
           return;
         }
 
@@ -1782,6 +1891,7 @@
         immersionMode.hidden = false;
         document.body.classList.add("immersion-open");
         pageMain.inert = true;
+        updateImmersionScopeCopy();
         renderImmersionCard();
         setImmersionPlaying(false);
         if (!canReadAloud) {
@@ -1804,6 +1914,13 @@
 
       openImmersionButton.addEventListener("click", openImmersion);
       closeImmersionButton.addEventListener("click", closeImmersion);
+      immersionFavoritesOnly.addEventListener("change", () => {
+        setFavoritesOnly(immersionFavoritesOnly.checked);
+      });
+      immersionFavoritesOnlyMode.addEventListener("change", () => {
+        setFavoritesOnly(immersionFavoritesOnlyMode.checked);
+        applyImmersionScope();
+      });
       immersionPrev.addEventListener("click", () => moveImmersion(-1));
       immersionNext.addEventListener("click", () => moveImmersion(1));
       immersionRead.addEventListener("click", () => {
@@ -2032,6 +2149,7 @@
       });
 
       renderEnglishList();
+      updateImmersionScopeCopy();
       englishListPanel.open = practiceOpenState.englishList === true;
       englishListPanel.addEventListener("toggle", persistEnglishListOpenState);
 
