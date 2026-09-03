@@ -304,9 +304,43 @@
     }
 
     .english-sentence-list li {
-      padding: 9px 4px;
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      padding: 7px 4px;
       color: #354c61;
       border-top: 1px solid #edf0f1;
+    }
+
+    .english-sentence-favorite,
+    .english-sentence-favorite[aria-pressed="true"] {
+      flex: 0 0 auto;
+      min-width: 32px;
+      min-height: 32px;
+      margin-top: 1px;
+      padding: 0;
+      border: none;
+      border-radius: 8px;
+      color: #c3ccd3;
+      background: transparent;
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .english-sentence-favorite:hover {
+      border: none;
+      color: var(--gold);
+      background: var(--gold-soft);
+    }
+
+    .english-sentence-favorite[aria-pressed="true"] {
+      color: var(--gold);
+    }
+
+    .english-sentence-text {
+      flex: 1;
+      min-width: 0;
+      padding-top: 5px;
       overflow-wrap: anywhere;
     }
 
@@ -1500,10 +1534,38 @@
       function getSavedSentences() {
         return Object.entries(practiceData)
           .flatMap(([patternId, pairs]) => Array.isArray(pairs)
-            ? pairs.map((pair) => ({ ...pair, patternId }))
+            ? pairs.map((pair, pairIndex) => ({ ...pair, patternId, pairIndex }))
             : [])
           .filter((pair) => pair && typeof pair.en === "string" && pair.en.trim())
-          .sort((a, b) => String(b.savedAt || "").localeCompare(String(a.savedAt || "")));
+          .sort((a, b) => {
+            const favoriteA = a.favorite === true ? 1 : 0;
+            const favoriteB = b.favorite === true ? 1 : 0;
+            if (favoriteA !== favoriteB) return favoriteB - favoriteA;
+            return String(b.savedAt || "").localeCompare(String(a.savedAt || ""));
+          });
+      }
+
+      function toggleEnglishFavorite(patternId, pairIndex) {
+        const pairs = practiceData[patternId];
+        if (!Array.isArray(pairs) || !pairs[pairIndex]) return;
+
+        const pair = pairs[pairIndex];
+        const wasFavorite = pair.favorite === true;
+        if (wasFavorite) delete pair.favorite;
+        else pair.favorite = true;
+
+        if (!persistPractice()) {
+          if (wasFavorite) pair.favorite = true;
+          else delete pair.favorite;
+          setDataStatus("저장 공간이 부족해 즐겨찾기를 바꾸지 못했습니다.", true);
+          return;
+        }
+
+        renderEnglishList();
+        const button = englishSentenceList.querySelector(
+          '[data-favorite-key="' + patternId + "-" + pairIndex + '"]'
+        );
+        if (button) button.focus();
       }
 
       function renderEnglishList() {
@@ -1519,7 +1581,24 @@
 
         sentences.forEach((pair) => {
           const item = document.createElement("li");
-          item.textContent = pair.en.trim();
+          const isFavorite = pair.favorite === true;
+          const favorite = document.createElement("button");
+          const text = document.createElement("span");
+
+          favorite.type = "button";
+          favorite.className = "english-sentence-favorite";
+          favorite.dataset.favoriteKey = pair.patternId + "-" + pair.pairIndex;
+          favorite.textContent = isFavorite ? "★" : "☆";
+          favorite.setAttribute("aria-pressed", String(isFavorite));
+          favorite.setAttribute("aria-label", isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가");
+          favorite.title = isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가";
+          favorite.addEventListener("click", () => {
+            toggleEnglishFavorite(pair.patternId, pair.pairIndex);
+          });
+
+          text.className = "english-sentence-text";
+          text.textContent = pair.en.trim();
+          item.append(favorite, text);
           englishSentenceList.append(item);
         });
       }
@@ -2020,7 +2099,8 @@
               merged[normalizedId].push({
                 ko,
                 en,
-                savedAt: typeof pair.savedAt === "string" ? pair.savedAt : new Date().toISOString()
+                savedAt: typeof pair.savedAt === "string" ? pair.savedAt : new Date().toISOString(),
+                ...(pair.favorite === true ? { favorite: true } : {})
               });
               added += 1;
             });
