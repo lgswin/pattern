@@ -1418,6 +1418,7 @@
       const jsonFile = document.querySelector("#json-file");
       const clearButton = document.querySelector("#clear-practice");
       const dataStatus = document.querySelector("#data-status");
+      const englishListPanel = document.querySelector("#english-list-panel");
       const englishListSummary = document.querySelector("#english-list-summary");
       const englishListEmpty = document.querySelector("#english-list-empty");
       const englishSentenceList = document.querySelector("#english-sentence-list");
@@ -1488,6 +1489,12 @@
         } catch (error) {
           // 저장 공간을 사용할 수 없는 경우에도 현재 화면의 열림/닫힘 동작은 유지합니다.
         }
+      }
+
+      function persistEnglishListOpenState() {
+        if (englishListPanel.open) practiceOpenState.englishList = true;
+        else delete practiceOpenState.englishList;
+        persistOpenState();
       }
 
       function getSavedSentences() {
@@ -1946,6 +1953,8 @@
       });
 
       renderEnglishList();
+      englishListPanel.open = practiceOpenState.englishList === true;
+      englishListPanel.addEventListener("toggle", persistEnglishListOpenState);
 
       function renderAllPairs() {
         pairRenderers.forEach((render) => render());
