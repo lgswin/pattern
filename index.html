@@ -231,6 +231,41 @@
     .data-actions button { background: #fff; }
     .data-actions button:hover { background: var(--teal-soft); }
 
+    .data-actions .file-import-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-size: .84rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .data-actions .file-import-button:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .data-actions .file-import-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     .data-actions .immersion-launch {
       display: inline-flex;
       align-items: center;
@@ -1133,8 +1168,10 @@
           <span>즐겨찾기만</span>
         </label>
         <button id="export-json" type="button">JSON 백업</button>
-        <button id="import-json" type="button">JSON 추가／복원</button>
-        <input id="json-file" type="file" accept=".json,application/json" hidden>
+        <label class="file-import-button">
+          <input id="json-file" class="file-import-input" type="file" accept=".json,application/json,text/json,text/plain">
+          JSON 추가／복원
+        </label>
         <button id="clear-practice" class="danger-button" type="button">전체 삭제</button>
         <span id="data-status" class="data-status" aria-live="polite"></span>
       </div>
@@ -1475,8 +1512,10 @@
       const voiceStorageKey = "ielts-immersion-voice-v1";
       const favoritesOnlyKey = "ielts-immersion-favorites-only-v1";
       const exportButton = document.querySelector("#export-json");
-      const importButton = document.querySelector("#import-json");
       const jsonFile = document.querySelector("#json-file");
+      const isAppleTouch = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      if (isAppleTouch) jsonFile.removeAttribute("accept");
       const clearButton = document.querySelector("#clear-practice");
       const dataStatus = document.querySelector("#data-status");
       const englishListPanel = document.querySelector("#english-list-panel");
@@ -1511,7 +1550,7 @@
       let practiceData = {};
       let practiceOpenState = {};
       let leftPageAt = 0;
-      let skipNextReturnRefresh = false;
+      let ignoreReturnRefreshUntil = 0;
       let immersionItems = [];
       let immersionIndex = 0;
       let immersionTimer = null;
@@ -2182,20 +2221,33 @@
         setDataStatus("JSON 백업 파일을 저장했습니다.");
       });
 
-      importButton.addEventListener("click", () => {
-        skipNextReturnRefresh = true;
-        jsonFile.click();
-      });
-      importButton.addEventListener("click", () => {
-        jsonFile.click();
+      function ignoreReturnRefresh(ms = 180000) {
+        ignoreReturnRefreshUntil = Math.max(ignoreReturnRefreshUntil, Date.now() + ms);
+      }
+
+      function readFileText(file) {
+        if (file && typeof file.text === "function") return file.text();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ""));
+          reader.onerror = () => reject(new Error("read-failed"));
+          reader.readAsText(file);
+        });
+      }
+
+      jsonFile.addEventListener("click", () => {
+        ignoreReturnRefresh();
       });
 
       jsonFile.addEventListener("change", async () => {
         const file = jsonFile.files && jsonFile.files[0];
         if (!file) return;
 
+        ignoreReturnRefresh();
+
         try {
-          const backup = JSON.parse(await file.text());
+          const raw = String(await readFileText(file)).replace(/^\uFEFF/, "");
+          const backup = JSON.parse(raw);
           if (!backup || backup.format !== "ielts-pattern-practice" || backup.version !== 1 ||
               !backup.patterns || typeof backup.patterns !== "object" || Array.isArray(backup.patterns)) {
             throw new Error("invalid-format");
@@ -2277,13 +2329,9 @@
       });
 
       function refreshAfterReturn() {
+        if (Date.now() < ignoreReturnRefreshUntil) return;
         if (!leftPageAt || Date.now() - leftPageAt < 500) return;
         leftPageAt = 0;
-
-        if (skipNextReturnRefresh) {
-          skipNextReturnRefresh = false;
-          return;
-        }
 
         const hasUnsavedInput = [...document.querySelectorAll(".practice-form textarea")]
           .some((field) => field.value.trim());
